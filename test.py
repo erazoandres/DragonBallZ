@@ -116,7 +116,28 @@ player_health = random.randint(150,250)
 
 # Reproduce el sonido de fondo
 music.play("sound.mp3")
-music.set_volume(0.5)
+music.set_volume(0.3)
+
+# Cargar sonido de teletransportación
+tele_sound = sounds.sonidotransportacion  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
+tele_sound.set_volume(0.1)
+
+golpeando_sound = sounds.sonidogolpeando  # Asegúrate de que el archivo golpeando.wav está en la carpeta sounds
+golpeando_sound.set_volume(0.1)
+
+kame_sound = sounds.sonidokame  # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+kame_sound.set_volume(0.1)
+
+salto_sound = sounds.sonidosalto # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+salto_sound.set_volume(0.1)
+
+sonido_carga = sounds.sonidocarga # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+sonido_carga.set_volume(0.1)
+
+
+sonido_muere = sounds.muere # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+sonido_muere.set_volume(0.1)
+
 
 # Actualiza las posiciones y la animación
 def update(dt):
@@ -186,6 +207,7 @@ def update(dt):
         
     # Salto del personaje principal
     if keyboard.space:
+        salto_sound.play()
         kameha[0].y -= 30 
         saltando = 1
     else:
@@ -193,6 +215,7 @@ def update(dt):
     
     # Ataque del personaje principal
     if keyboard.j:
+        kame_sound.play()  # Reproduce el sonido de teletransportación
         attack = 1
      
     else:
@@ -201,6 +224,7 @@ def update(dt):
         
     # Carga del personaje principal
     if keyboard.i:
+        sonido_carga.play()
         carga = 1
     else:
         carga = 0
@@ -213,6 +237,7 @@ def update(dt):
         
     # Teletransportación del personaje principal
     if keyboard.u:
+        tele_sound.play()  # Reproduce el sonido de teletransportación
         teletransportacion = 1
         teles[current_sprite4].x += 10 
     else:
@@ -225,6 +250,7 @@ def update(dt):
     
     # Detectar colisiones entre Broly y los ataques del personaje principal
     if (attack == 1 or peleando == 1) and brolys[current_sprite5].colliderect(kameha[current_sprite]):
+        golpeando_sound.play()
         broly_health -= random.random()
         
         if dir == "left":
@@ -241,6 +267,7 @@ def update(dt):
 
         print("Broly Health:", broly_health)
         if broly_health <= 0:
+            sonido_muere.play()
             broly_peleando = 0  # Broly ha sido derrotado
 
     if brolys[current_sprite5].colliderect(kameha[current_sprite]):
