@@ -2,7 +2,7 @@ import os
 import pgzrun
 import random
 
-os.environ['SDL_VIDEO_WINDOW_POS'] = '0,0'
+os.environ['SDL_VIDEO_WINDOW_POS'] = '0,-200'
 
 # Configura el tamaño de la ventana
 WIDTH = 800
@@ -24,6 +24,14 @@ broly3 = Actor("broly2.png")
 broly4 = Actor("broly3.png")
 broly5 = Actor("broly4.png")
 broly6 = Actor("broly5.png")
+
+broly1_right = Actor("broly0_right.png")
+broly2_right = Actor("broly1_right.png")
+broly3_right = Actor("broly2_right.png")
+broly4_right = Actor("broly3_right.png")
+broly5_right = Actor("broly4_right.png")
+broly6_right = Actor("broly5_right.png")
+
 
 pelea1 = Actor("pelea0.png")
 pelea2 = Actor("pelea1.png")
@@ -67,13 +75,14 @@ carga2 = Actor("carga2.png")
 carga3 = Actor("carga3.png")
 
 # Listas de kameha para diferentes acciones
-cargas = [carga1, carga2, carga3]
-kameha =     [kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
+cargas =     [carga1, carga2, carga3]
+kameha =     [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
 kameha_izq = [kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
 
 peleas = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
-teles = [tele1, tele2, tele3]
+teles =  [tele1, tele2, tele3]
 brolys = [broly1, broly2, broly3, broly4, broly5, broly6]
+brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
 
 # Variables de la animación
 current_sprite = 0  # ataque
@@ -135,6 +144,10 @@ def update(dt):
     # Actualiza la posición de los kameha de Broly
     for broly in brolys:
         broly.pos = (sprite2_x, sprite2_y)
+
+    # Actualiza la posición de los kameha de Broly
+    for broly in brolys_right:
+        broly.pos = (sprite2_x, sprite2_y)
     
     # Incrementa el contador de cuadros
     frame_count += 1
@@ -160,10 +173,10 @@ def update(dt):
         current_sprite5 = (current_sprite5 + 1) % len(brolys)
     
     # Movimiento del personaje principal
-    if keyboard.d:
+    if keyboard.d and sprite_x<WIDTH - 16:
         sprite_x += 2
         dir = "right"
-    elif keyboard.a:
+    elif keyboard.a and sprite_x>=16:
         sprite_x -= 2
         dir = "left"
         
@@ -210,6 +223,10 @@ def update(dt):
     if (attack == 1 or peleando == 1) and brolys[current_sprite5].colliderect(kameha[current_sprite]):
         broly_health -= random.random()
         
+        if dir == "left":
+            sprite2_x -= random.randint(2,4)
+        elif dir == "right":
+            sprite2_x += random.randint(2,4)
        
 
         if peleando == 1:
@@ -248,15 +265,18 @@ def draw():
         teles[current_sprite4].draw()
     else:
 
-        if dir == "left":
-            kameha[2].draw()
-        elif dir == "right":
-            kameha[1].draw()
+        if dir == "left" and peleando == 0:
+            kameha[0].draw()
+        elif dir == "right" and peleando == 0:
+            kameha[0].draw()
     
     if broly_health > 0:
-        brolys[current_sprite5].draw()
+        if sprite2_x > sprite_x:
+            brolys[current_sprite5].draw()
+        elif sprite2_x < sprite_x:
+            brolys_right[current_sprite5].draw()
     else:
-        brolys[0].draw()  # Dibuja la imagen de Broly derrotado (puede cambiarse según la imagen de derrota)
+        brolys[1].draw()  # Dibuja la imagen de Broly derrotado (puede cambiarse según la imagen de derrota)
     
     # Dibujar las barras de salud
     draw_health_bar("Player", player_health, 10, 30, (255, 0, 0))
