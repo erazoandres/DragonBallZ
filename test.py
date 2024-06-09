@@ -77,7 +77,7 @@ carga3 = Actor("carga3.png")
 # Listas de kameha para diferentes acciones
 cargas =     [carga1, carga2, carga3]
 kameha =     [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
-kameha_izq = [kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
+kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
 
 peleas = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
 teles =  [tele1, tele2, tele3]
@@ -113,6 +113,10 @@ dir = "right"
 # Variables de salud
 broly_health = random.randint(200,250)
 player_health = random.randint(150,250)
+
+# Reproduce el sonido de fondo
+music.play("sound.mp3")
+music.set_volume(0.5)
 
 # Actualiza las posiciones y la animación
 def update(dt):
