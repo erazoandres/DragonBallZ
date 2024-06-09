@@ -33,6 +33,12 @@ broly5_right = Actor("broly4_right.png")
 broly6_right = Actor("broly5_right.png")
 
 
+broly0_desconvertido = Actor("broly0_desconvertido")
+broly1_desconvertido = Actor("broly1_desconvertido")
+broly2_desconvertido = Actor("broly2_desconvertido")
+broly3_desconvertido = Actor("broly3_desconvertido")
+
+
 pelea1 = Actor("pelea0.png")
 pelea2 = Actor("pelea1.png")
 pelea3 = Actor("pelea2.png")
@@ -83,13 +89,15 @@ peleas = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
 teles =  [tele1, tele2, tele3]
 brolys = [broly1, broly2, broly3, broly4, broly5, broly6]
 brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
+broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconvertido,broly3_desconvertido]
 
 # Variables de la animación
-current_sprite = 0  # ataque
+current_sprite = 0   # ataque
 current_sprite2 = 0  # carga
 current_sprite3 = 0  # pelea
 current_sprite4 = 0  # teletransportación
 current_sprite5 = 0  # broly
+current_sprite6 = 0  # broly desconvertido
 
 animation_speed = 8  # Velocidad de la animación, ajustar según necesidad
 
@@ -98,6 +106,7 @@ frame_count2 = 0
 frame_count3 = 0
 frame_count4 = 0
 frame_count5 = 0
+frame_count6 = 0
 
 # Variables de estado
 attack = 0
@@ -106,6 +115,7 @@ saltando = 0
 peleando = 0
 teletransportacion = 0
 broly_peleando = 1
+desconvertido = 0
 
 # Direccion
 dir = "right"
@@ -141,10 +151,10 @@ sonido_muere.set_volume(0.1)
 
 # Actualiza las posiciones y la animación
 def update(dt):
-    global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5
-    global frame_count, frame_count2, frame_count3, frame_count4, frame_count5
+    global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
+    global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir
-    global sprite2_x, broly_health, player_health
+    global sprite2_x, broly_health, player_health,desconvertido,teles
     
     # Actualiza la posición de los kameha de carga
     for carga in cargas:
@@ -166,12 +176,16 @@ def update(dt):
     for tele in teles:
         tele.pos = (sprite_x, sprite_y)
         
-    # Actualiza la posición de los kameha de Broly
+    # Actualiza la posición de los kameha 
     for broly in brolys:
         broly.pos = (sprite2_x, sprite2_y)
 
-    # Actualiza la posición de los kameha de Broly
+    # Actualiza la posición de los kameha 
     for broly in brolys_right:
+        broly.pos = (sprite2_x, sprite2_y)
+
+    # Actualiza la posición de la destransformacion de broly
+    for broly in broly_desconvertido:
         broly.pos = (sprite2_x, sprite2_y)
     
     # Incrementa el contador de cuadros
@@ -180,6 +194,7 @@ def update(dt):
     frame_count3 += 1
     frame_count4 += 1
     frame_count5 += 1
+    frame_count6 += 1
     
     # Actualiza la animación según el contador de cuadros
     if frame_count % animation_speed == 0:
@@ -196,6 +211,9 @@ def update(dt):
         
     if frame_count5 % animation_speed == 0:
         current_sprite5 = (current_sprite5 + 1) % len(brolys)
+
+    if frame_count6 % animation_speed == 0:
+        current_sprite6 = (current_sprite6 + 1) % len(broly_desconvertido)
     
     # Movimiento del personaje principal
     if keyboard.d and sprite_x<WIDTH - 16:
@@ -238,8 +256,8 @@ def update(dt):
     # Teletransportación del personaje principal
     if keyboard.u:
         tele_sound.play()  # Reproduce el sonido de teletransportación
-        teletransportacion = 1
-        teles[current_sprite4].x += 10 
+        teletransportacion = 1      
+    
     else:
         teletransportacion = 0
         
@@ -251,7 +269,7 @@ def update(dt):
     # Detectar colisiones entre Broly y los ataques del personaje principal
     if (attack == 1 or peleando == 1) and brolys[current_sprite5].colliderect(kameha[current_sprite]):
         golpeando_sound.play()
-        broly_health -= random.random()
+        
         
         if dir == "left":
             sprite2_x -= random.randint(2,4)
@@ -260,21 +278,22 @@ def update(dt):
        
 
         if peleando == 1:
-            broly_health -= random.random()
-        elif attack == 1:
-            broly_health -= random.random()
+            broly_health -= random.random() * 6
+        elif attack == 1: 
+            broly_health -= random.random() * 6
 
-
-        print("Broly Health:", broly_health)
-        if broly_health <= 0:
-            sonido_muere.play()
+        if broly_health <= 1:
             broly_peleando = 0  # Broly ha sido derrotado
+            sonido_muere.play()
 
-    if brolys[current_sprite5].colliderect(kameha[current_sprite]):
+    if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1:
         player_health -= random.random()
 
 # Dibuja los kameha en la pantalla
 def draw():
+
+    global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x
+
     screen.clear()
     fondo.draw()
          
@@ -294,10 +313,11 @@ def draw():
         peleas[current_sprite3].draw()
     elif teletransportacion == 1:
         teles[current_sprite4].draw()
+        sprite_x = sprite2_x + 10
     else:
 
         if dir == "left" and peleando == 0:
-            kameha[0].draw()
+            kameha_izq[0].draw()
         elif dir == "right" and peleando == 0:
             kameha[0].draw()
     
@@ -307,7 +327,11 @@ def draw():
         elif sprite2_x < sprite_x:
             brolys_right[current_sprite5].draw()
     else:
-        brolys[1].draw()  # Dibuja la imagen de Broly derrotado (puede cambiarse según la imagen de derrota)
+        if desconvertido == 1:
+            broly_peleando = 0
+            broly_desconvertido[current_sprite6].draw()
+        broly_desconvertido[3].draw()
+        #brolys[1].draw()  # Dibuja la imagen de Broly derrotado (puede cambiarse según la imagen de derrota)
     
     # Dibujar las barras de salud
     draw_health_bar("Player", player_health, 10, 30, (255, 0, 0))
