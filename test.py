@@ -148,6 +148,7 @@ victoria = 0
 sprite_reproducido = False
 firstTime = True
 firstTimeMusic = True
+firstTimeEndBattle = True
 
 # Direccion de personaje princial, Papucho Goku! :)
 dir = "right"
@@ -162,6 +163,8 @@ player_health = random.randint(150,250)
 # Reproduce el sonido de fondo principal
 music.play("sound.mp3")
 music.set_volume(0.1)
+
+
 
 #Efectos de sonido del juego en .wav
 tele_sound = sounds.sonidotransportacion  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
@@ -360,9 +363,12 @@ def update(dt):
     
     # Detectar colisiones entre Broly y los ataques del personaje principal
     if (attack == 1 or peleando == 1) and brolys[current_sprite5].colliderect(kameha[current_sprite]):
-        golpeando_sound.play()
-        sonido_muere.play()
         
+        
+        if broly_health>=0:
+            golpeando_sound.play()
+        
+       
         
         #Broly sigue a Goku.
         if dir == "left":
@@ -389,7 +395,7 @@ def update(dt):
 # Dibuja los kameha en la pantalla
 def draw():
 
-    global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x , victoria  ,sprite_reproducido
+    global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x , victoria  ,sprite_reproducido,firstTimeEndBattle
     screen.clear()
 
     #CONDICIONAL: SI LLEGUE A DERROTAR A BROLY
@@ -467,7 +473,9 @@ def draw():
     elif victoria == 1:
         
         ganaste.draw()
-        sonido_final_goku.play()
+        if firstTimeEndBattle == True:
+            sonido_final_goku.play()
+            #firstTimeEndBattle  = False
 
 
 
