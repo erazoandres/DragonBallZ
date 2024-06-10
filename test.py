@@ -1,17 +1,18 @@
-import os
 import pgzrun
 import random
-
-os.environ['SDL_VIDEO_WINDOW_POS'] = '0,-200'
+import os 
+import time
 
 # Configura el tamaño de la ventana
 WIDTH = 800
 HEIGHT = 600
-
 FPS = 30
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 # Carga la imagen del fondo
 fondo = Actor("c.jpeg")
+ganaste = Actor("win.jpeg")
 
 # Carga las imágenes de los kameha
 tele1 = Actor("tele0.png")
@@ -45,6 +46,14 @@ pelea3 = Actor("pelea2.png")
 pelea4 = Actor("pelea3.png")
 pelea5 = Actor("pelea4.png")
 pelea6 = Actor("pelea5.png")
+
+pelea1_left = Actor("pelea0_left.png")
+pelea2_left = Actor("pelea1_left.png")
+pelea3_left = Actor("pelea2_left.png")
+pelea4_left = Actor("pelea3_left.png")
+pelea5_left = Actor("pelea4_left.png")
+pelea6_left = Actor("pelea5_left.png")
+
 
 sprite_x = 200
 sprite_y = 470
@@ -80,19 +89,33 @@ carga1 = Actor("carga1.png")
 carga2 = Actor("carga2.png")
 carga3 = Actor("carga3.png")
 
-# Listas de kameha para diferentes acciones
-cargas =     [carga1, carga2, carga3]
+
+
+# Listas para diferentes acciones
+teles =  [tele1, tele2, tele3]
+cargas = [carga1, carga2, carga3]
+peleas = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
+peleas_left = [pelea1_left, pelea2_left, pelea3_left, pelea4_left, pelea5_left, pelea6_left]
+
+
+semillas  = []
+
+for i in range(3):
+    x = random.randint(0,WIDTH)
+    y = random.randint(0,1800)
+    semilla = Actor("./semillas/semilla.png" , (x,-y))
+    semillas.append(semilla)
+
 kameha =     [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
 kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
 
-peleas = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
-teles =  [tele1, tele2, tele3]
+
 brolys = [broly1, broly2, broly3, broly4, broly5, broly6]
 brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
 broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconvertido,broly3_desconvertido]
 
 # Variables de la animación
-current_sprite = 0   # ataque
+current_sprite  = 0   # ataque
 current_sprite2 = 0  # carga
 current_sprite3 = 0  # pelea
 current_sprite4 = 0  # teletransportación
@@ -100,8 +123,9 @@ current_sprite5 = 0  # broly
 current_sprite6 = 0  # broly desconvertido
 
 animation_speed = 8  # Velocidad de la animación, ajustar según necesidad
+animation_speedBroly = 16  # Velocidad de la animación, ajustar según necesidad
 
-frame_count = 0
+frame_count  = 0
 frame_count2 = 0
 frame_count3 = 0
 frame_count4 = 0
@@ -116,6 +140,8 @@ peleando = 0
 teletransportacion = 0
 broly_peleando = 1
 desconvertido = 0
+victoria = 0
+sprite_reproducido = False
 
 # Direccion
 dir = "right"
@@ -149,12 +175,41 @@ sonido_muere = sounds.muere # Asegúrate de que el archivo kame.wav está en la 
 sonido_muere.set_volume(0.1)
 
 
+def draw_health_bar(name, health, x, y, color):
+    screen.draw.text(name, (x, y - 20), color="white")
+    bar_width = 100
+    bar_height = 20
+    health_percentage = health / 100
+    fill_width = bar_width * health_percentage
+    screen.draw.filled_rect(Rect((x, y), (bar_width, bar_height)), "black")
+    screen.draw.filled_rect(Rect((x, y), (fill_width, bar_height)), color)
+    screen.draw.rect(Rect((x, y), (fill_width, bar_height)), "white")
+
+
+def mover_semillas():
+    global semillas
+
+    for i in range(len(semillas)):
+        if semillas[i].y < HEIGHT + 20:
+            semillas[i].y += 15
+
 # Actualiza las posiciones y la animación
 def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir
-    global sprite2_x, broly_health, player_health,desconvertido,teles
+    global sprite2_x, broly_health, player_health,desconvertido,teles,victoria
+ 
+    probabilidad_semilla = random.randint(1,50)
+    if probabilidad_semilla == 20:
+        mover_semillas()
+
+
+    colision_semilla = kameha[current_sprite].collidelist(semillas)
+
+    if colision_semilla != -1:
+        semillas.pop(colision_semilla)
+    
     
     # Actualiza la posición de los kameha de carga
     for carga in cargas:
@@ -187,6 +242,10 @@ def update(dt):
     # Actualiza la posición de la destransformacion de broly
     for broly in broly_desconvertido:
         broly.pos = (sprite2_x, sprite2_y)
+
+    # Actualiza la posición de la destransformacion de broly
+    for pelea in peleas_left:
+        pelea.pos = (sprite_x, sprite_y)
     
     # Incrementa el contador de cuadros
     frame_count += 1
@@ -201,7 +260,7 @@ def update(dt):
         current_sprite = (current_sprite + 1) % len(kameha)
         
     if frame_count2 % animation_speed == 0:
-        current_sprite2 = (current_sprite2 + 1) % len(cargas)
+        current_sprite2 = (current_sprite2 + 2) % len(cargas)
     
     if frame_count3 % animation_speed == 0:
         current_sprite3 = (current_sprite3 + 1) % len(peleas)
@@ -212,7 +271,7 @@ def update(dt):
     if frame_count5 % animation_speed == 0:
         current_sprite5 = (current_sprite5 + 1) % len(brolys)
 
-    if frame_count6 % animation_speed == 0:
+    if frame_count6 % animation_speedBroly == 0:
         current_sprite6 = (current_sprite6 + 1) % len(broly_desconvertido)
     
     # Movimiento del personaje principal
@@ -226,7 +285,7 @@ def update(dt):
     # Salto del personaje principal
     if keyboard.space:
         salto_sound.play()
-        kameha[0].y -= 30 
+        kameha[0].y -= 150 
         saltando = 1
     else:
         saltando = 0
@@ -284,7 +343,9 @@ def update(dt):
 
         if broly_health <= 1:
             broly_peleando = 0  # Broly ha sido derrotado
+            desconvertido = 1
             sonido_muere.play()
+            #victoria = 1
 
     if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1:
         player_health -= random.random()
@@ -292,59 +353,68 @@ def update(dt):
 # Dibuja los kameha en la pantalla
 def draw():
 
-    global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x
-
+    global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x , victoria  ,sprite_reproducido
     screen.clear()
-    fondo.draw()
-         
-    if carga == 1:
-        cargas[current_sprite2].draw()
-    if attack == 1:
-        if dir == "right":
-            print(len(kameha))
-            kameha[current_sprite].draw()
-        elif dir == "left":
-            print(len(kameha_izq))
-            kameha_izq[current_sprite].draw()
 
-    elif saltando == 1:
-        kameha[0].draw()
-    elif peleando == 1:
-        peleas[current_sprite3].draw()
-    elif teletransportacion == 1:
-        teles[current_sprite4].draw()
-        sprite_x = sprite2_x + 10
-    else:
+    #SI DERROTE A BROLY
+    if victoria == 0:
 
-        if dir == "left" and peleando == 0:
-            kameha_izq[0].draw()
-        elif dir == "right" and peleando == 0:
+        fondo.draw()
+
+        for i in range(len(semillas)):
+            semillas[i].draw()
+            
+        if carga == 1:
+            cargas[current_sprite2].draw()
+        if attack == 1:
+            if dir == "right":
+                print(len(kameha))
+                kameha[current_sprite].draw()
+            elif dir == "left":
+                print(len(kameha_izq))
+                kameha_izq[current_sprite].draw()
+
+        elif saltando == 1:
             kameha[0].draw()
-    
-    if broly_health > 0:
-        if sprite2_x > sprite_x:
-            brolys[current_sprite5].draw()
-        elif sprite2_x < sprite_x:
-            brolys_right[current_sprite5].draw()
-    else:
-        if desconvertido == 1:
-            broly_peleando = 0
-            broly_desconvertido[current_sprite6].draw()
-        broly_desconvertido[3].draw()
-        #brolys[1].draw()  # Dibuja la imagen de Broly derrotado (puede cambiarse según la imagen de derrota)
-    
-    # Dibujar las barras de salud
-    draw_health_bar("Player", player_health, 10, 30, (255, 0, 0))
-    draw_health_bar("Broly", broly_health, WIDTH - 280, 30, (0, 255, 0))
+        elif peleando == 1:
 
-def draw_health_bar(name, health, x, y, color):
-    screen.draw.text(name, (x, y - 20), color="white")
-    bar_width = 100
-    bar_height = 20
-    health_percentage = health / 100
-    fill_width = bar_width * health_percentage
-    screen.draw.filled_rect(Rect((x, y), (bar_width, bar_height)), "black")
-    screen.draw.filled_rect(Rect((x, y), (fill_width, bar_height)), color)
-    screen.draw.rect(Rect((x, y), (fill_width, bar_height)), "white")
+            if dir == "right":
+                peleas[current_sprite3].draw()
+            elif dir == "left":
+                peleas_left[current_sprite3].draw()
+
+        elif teletransportacion == 1:
+            teles[current_sprite4].draw()
+            sprite_x = sprite2_x + 10
+        else:
+
+            if dir == "left" and peleando == 0:
+                kameha_izq[0].draw()
+            elif dir == "right" and peleando == 0:
+                kameha[0].draw()
+        
+        if broly_health > 0:
+            if sprite2_x > sprite_x:
+                brolys[current_sprite5].draw()
+            elif sprite2_x < sprite_x:
+                brolys_right[current_sprite5].draw()
+        else:
+            if desconvertido == 1 and not sprite_reproducido:
+                                
+                broly_desconvertido[current_sprite6].draw()
+                sprite_reproducido = True
+            else:
+                broly_desconvertido[3].draw()
+
+            broly_peleando = 0
+            #brolys[1].draw()  # Dibuja la imagen de Broly derrotado (puede cambiarse según la imagen de derrota)
+        
+        # Dibujar las barras de salud
+        draw_health_bar("Player", player_health, 10, 30, (255, 0, 0))
+        draw_health_bar("Broly", broly_health, WIDTH - 280, 30, (0, 255, 0))
+    elif victoria == 1:
+        ganaste.draw()
+
+
 
 pgzrun.go()
