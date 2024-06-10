@@ -69,6 +69,7 @@ sprite_saltando = Actor("saltando.png")
 sprite_left = Actor("gokuleft.png")
 sprite_right = Actor("gokuright.png")
 
+goku_derrotado = Actor("goku_derrotado",pos = (sprite_x , sprite_y))
 
 kameha1 = Actor("goku1.png")
 kameha2 = Actor("goku2.png")
@@ -90,6 +91,7 @@ kameha6_izq = Actor("goku6_left.png")
 kameha7_izq = Actor("goku7_left.png")
 kameha8_izq = Actor("goku8_left.png")
 kameha9_izq = Actor("goku9_left.png")
+
 
 carga1 = Actor("carga1.png")
 carga2 = Actor("carga2.png")
@@ -195,6 +197,9 @@ sonido_pide.set_volume(0.6)
 sonido_final_goku = sounds.sonidofinalgoku # Asegúrate de que el archivo curar.wav está en la carpeta sounds
 sonido_final_goku.set_volume(0.6)
 
+sonido_grito_goku = sounds.gritogoku # Asegúrate de que el archivo curar.wav está en la carpeta sounds
+sonido_grito_goku.set_volume(0.6)
+
 
 
 #Dibujando los rectangulos de la vida de ambos personajes.
@@ -232,8 +237,8 @@ def update(dt):
 
     #Reproducir dialogo entre Krilin y Goku cuando este nececita semillas.
     for i in range(len(semillas)):
-        if semillas[i].y >= 0 and firstTime == True:
-            sonido_pide.play()
+        if semillas[i].y >= 0 and firstTime == True and player_health>=0:
+            sonido_pide.play() 
             firstTime = False
 
 
@@ -310,77 +315,80 @@ def update(dt):
     if frame_count6 % animation_speedBroly == 0:
         current_sprite6 = (current_sprite6 + 1) % len(broly_desconvertido)
     
-    # Movimiento del personaje principal
-    if keyboard.d and sprite_x<WIDTH - 16:
-        sprite_x += 2
-        dir = "right"
-    elif keyboard.a and sprite_x>=16:
-        sprite_x -= 2
-        dir = "left"
+
+    if player_health>=0:
+
+        # Movimiento del personaje principal
+        if keyboard.d and sprite_x<WIDTH - 16:
+            sprite_x += 2
+            dir = "right"
+        elif keyboard.a and sprite_x>=16:
+            sprite_x -= 2
+            dir = "left"
+            
+        # Salto del personaje principal
+        if keyboard.space:
+            salto_sound.play()
+            kameha[0].y -= 150 
+            saltando = 1
+        else:
+            saltando = 0
         
-    # Salto del personaje principal
-    if keyboard.space:
-        salto_sound.play()
-        kameha[0].y -= 150 
-        saltando = 1
-    else:
-        saltando = 0
+        # Ataque del personaje principal
+        if keyboard.j:
+            kame_sound.play()  # Reproduce el sonido de teletransportación
+            attack = 1
+        
+        else:
+            current_sprite = 0
+            attack = 0
+            
+        # Carga del personaje principal
+        if keyboard.i:
+            sonido_carga.play()
+            carga = 1
+        else:
+            carga = 0
+            
+        # Pelea del personaje principal
+        if keyboard.l:
+            peleando = 1
+        else:
+            peleando = 0
+            
+        # Teletransportación del personaje principal
+        if keyboard.u:
+            tele_sound.play()  # Reproduce el sonido de teletransportación
+            teletransportacion = 1      
+        
+        else:
+            teletransportacion = 0
+        
+        # Broly sigue al personaje principal con un retraso
+        follow_speed = 0.007  # Ajusta esta velocidad para cambiar el retraso
+        if broly_peleando == 1: 
+            sprite2_x += ((sprite_x - sprite2_x) * follow_speed)
     
-    # Ataque del personaje principal
-    if keyboard.j:
-        kame_sound.play()  # Reproduce el sonido de teletransportación
-        attack = 1
-     
-    else:
-        current_sprite = 0
-        attack = 0
-        
-    # Carga del personaje principal
-    if keyboard.i:
-        sonido_carga.play()
-        carga = 1
-    else:
-        carga = 0
-        
-    # Pelea del personaje principal
-    if keyboard.l:
-        peleando = 1
-    else:
-        peleando = 0
-        
-    # Teletransportación del personaje principal
-    if keyboard.u:
-        tele_sound.play()  # Reproduce el sonido de teletransportación
-        teletransportacion = 1      
-    
-    else:
-        teletransportacion = 0
-        
-    # Broly sigue al personaje principal con un retraso
-    follow_speed = 0.007  # Ajusta esta velocidad para cambiar el retraso
-    if broly_peleando == 1: 
-        sprite2_x += ((sprite_x - sprite2_x) * follow_speed)
-    
-    # Detectar colisiones entre Broly y los ataques del personaje principal
-    if (attack == 1 or peleando == 1) and brolys[current_sprite5].colliderect(kameha[current_sprite]):
+        # Detectar colisiones entre Broly y los ataques del personaje principal
+        if (attack == 1 or peleando == 1) and brolys[current_sprite5].colliderect(kameha[current_sprite]):
         
         
-        if broly_health>=0:
-            golpeando_sound.play()
+            if broly_health>=0:
+                golpeando_sound.play()
         
        
         
-        #Broly sigue a Goku.
-        if dir == "left":
-            sprite2_x -= random.randint(2,4)
-        elif dir == "right":
-            sprite2_x += random.randint(2,4)
+            #Broly sigue a Goku.
+            if dir == "left":
+                sprite2_x -= random.randint(2,4)
+            elif dir == "right":
+                sprite2_x += random.randint(2,4)
 
-        #Restando via a Broly con los ataques de Goku   
-        if peleando == 1:
-            broly_health -= random.random() * 3
-        elif attack == 1: 
-            broly_health -= random.random() * 3
+            #Restando via a Broly con los ataques de Goku   
+            if peleando == 1:
+                broly_health -= random.random() * 3
+            elif attack == 1: 
+                broly_health -= random.random() * 3
 
         #Verifica si derrotamos a Broly.
         if broly_health <= 1:
@@ -393,9 +401,11 @@ def update(dt):
         player_health -= random.random()
 
 # Dibuja los kameha en la pantalla
+
 def draw():
 
     global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x , victoria  ,sprite_reproducido,firstTimeEndBattle
+    global goku_derrotado
     screen.clear()
 
     #CONDICIONAL: SI LLEGUE A DERROTAR A BROLY
@@ -413,10 +423,10 @@ def draw():
             cargas[current_sprite2].draw()
         if attack == 1:
             #Animacion del Kamehame-ha!, en ambas direcciones
-            if dir == "right":
+            if dir == "right" and player_health>=0:
                 kameha[current_sprite].draw()
-            elif dir == "left":
-                kameha_izq[current_sprite].draw()
+            elif dir == "left" and player_health>=0:
+                kameha_izq[current_sprite].draw()          
 
 
         #Animacion cuando salto
@@ -438,10 +448,14 @@ def draw():
         else:
             
             #Girar hacia los estados, estando estatico.
-            if dir == "left" and peleando == 0:
+            if dir == "left" and peleando == 0 and player_health>=0:
                 kameha_izq[0].draw()
-            elif dir == "right" and peleando == 0:
+            elif dir == "right" and peleando == 0 and player_health>=0:
                 kameha[0].draw()
+            else:
+            
+                goku_derrotado.pos = (sprite2_x+50,sprite2_y+20)
+                goku_derrotado.draw()
         
         #Animacion de ataque de Broly
         if broly_health > 0 and player_health >= 0:
@@ -452,7 +466,9 @@ def draw():
         
         #Broly cambia de postura al ganar.
         elif player_health<=0:
+            victoria = 0
             brolys_right[5].draw()
+            
 
         else:
             if victoria == 1 and not sprite_reproducido:
