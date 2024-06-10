@@ -1,21 +1,31 @@
 import pgzrun
 import random
 import os 
-import time
+
 
 # Configura el tamaño de la ventana
 WIDTH = 800
 HEIGHT = 600
 FPS = 30
 
+#Centrar la ventana al inicio.
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
-# Carga la imagen del fondo
-fondo = Actor("c.jpeg")
-ganaste = Actor("win.jpeg")
+#Variables que serviran para representar y controlar la posicion de cada jugados
 
-# Carga las imágenes de los kameha
+#Goku
+sprite_x = 200
+sprite_y = 470
+
+#Broly
+sprite2_x = 600
+sprite2_y = 450
+
+# Carga de Actores
 tele1 = Actor("tele0.png")
+fondo = Actor("c.jpeg")
+
+ganaste = Actor("win.jpeg")
 tele2 = Actor("tele1.png")
 tele3 = Actor("tele2.png")
 
@@ -55,15 +65,10 @@ pelea5_left = Actor("pelea4_left.png")
 pelea6_left = Actor("pelea5_left.png")
 
 
-sprite_x = 200
-sprite_y = 470
-
-sprite2_x = 600
-sprite2_y = 450
-
 sprite_saltando = Actor("saltando.png")
 sprite_left = Actor("gokuleft.png")
 sprite_right = Actor("gokuright.png")
+
 
 kameha1 = Actor("goku1.png")
 kameha2 = Actor("goku2.png")
@@ -74,6 +79,7 @@ kameha6 = Actor("goku6.png")
 kameha7 = Actor("goku7.png")
 kameha8 = Actor("goku8.png")
 kameha9 = Actor("goku9.png")
+kameha10 = Actor("goku_derrotado.png")
 
 kameha1_izq = Actor("goku1_left.png")
 kameha2_izq = Actor("goku2_left.png")
@@ -90,29 +96,26 @@ carga2 = Actor("carga2.png")
 carga3 = Actor("carga3.png")
 
 
-
-# Listas para diferentes acciones
+#Listas de cada animacion con  todos los actores en ellas.
 teles =  [tele1, tele2, tele3]
 cargas = [carga1, carga2, carga3]
+brolys = [broly1, broly2, broly3, broly4, broly5, broly6]
 peleas = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
 peleas_left = [pelea1_left, pelea2_left, pelea3_left, pelea4_left, pelea5_left, pelea6_left]
+kameha = [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
+brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
+broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconvertido,broly3_desconvertido]
+kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
 
 
-semillas  = []
-
+#Inicializando lista vacia de semillas, rellenada con 3.
+semillas  = [] 
 for i in range(3):
     x = random.randint(0,WIDTH)
     y = random.randint(0,1800)
     semilla = Actor("./semillas/semilla.png" , (x,-y))
     semillas.append(semilla)
 
-kameha =     [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
-kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
-
-
-brolys = [broly1, broly2, broly3, broly4, broly5, broly6]
-brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
-broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconvertido,broly3_desconvertido]
 
 # Variables de la animación
 current_sprite  = 0   # ataque
@@ -125,6 +128,7 @@ current_sprite6 = 0  # broly desconvertido
 animation_speed = 8  # Velocidad de la animación, ajustar según necesidad
 animation_speedBroly = 16  # Velocidad de la animación, ajustar según necesidad
 
+#Estos frames representan el cuadro de la cada animacion, corresponden con los 'current_spritex' (Estan unas lineas arriba).
 frame_count  = 0
 frame_count2 = 0
 frame_count3 = 0
@@ -132,7 +136,7 @@ frame_count4 = 0
 frame_count5 = 0
 frame_count6 = 0
 
-# Variables de estado
+# Variables de estado necesarias para controlar varios aspectos del juego
 attack = 0
 carga = 0
 saltando = 0
@@ -142,19 +146,24 @@ broly_peleando = 1
 desconvertido = 0
 victoria = 0
 sprite_reproducido = False
+firstTime = True
+firstTimeMusic = True
 
-# Direccion
+# Direccion de personaje princial, Papucho Goku! :)
 dir = "right"
 
 # Variables de salud
 broly_health = random.randint(200,250)
 player_health = random.randint(150,250)
 
-# Reproduce el sonido de fondo
-music.play("sound.mp3")
-music.set_volume(0.3)
 
-# Cargar sonido de teletransportación
+# Cargar y reproduccion de sonidos
+
+# Reproduce el sonido de fondo principal
+music.play("sound.mp3")
+music.set_volume(0.1)
+
+#Efectos de sonido del juego en .wav
 tele_sound = sounds.sonidotransportacion  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
 tele_sound.set_volume(0.1)
 
@@ -174,7 +183,18 @@ sonido_carga.set_volume(0.1)
 sonido_muere = sounds.muere # Asegúrate de que el archivo kame.wav está en la carpeta sounds
 sonido_muere.set_volume(0.1)
 
+sonido_curar = sounds.sonidocurar # Asegúrate de que el archivo curar.wav está en la carpeta sounds
+sonido_curar.set_volume(0.3)
 
+sonido_pide = sounds.sonidopidesemilla # Asegúrate de que el archivo pide.wav está en la carpeta sounds
+sonido_pide.set_volume(0.6)
+
+sonido_final_goku = sounds.sonidofinalgoku # Asegúrate de que el archivo curar.wav está en la carpeta sounds
+sonido_final_goku.set_volume(0.6)
+
+
+
+#Dibujando los rectangulos de la vida de ambos personajes.
 def draw_health_bar(name, health, x, y, color):
     screen.draw.text(name, (x, y - 20), color="white")
     bar_width = 100
@@ -187,8 +207,8 @@ def draw_health_bar(name, health, x, y, color):
 
 
 def mover_semillas():
+    #Moviendo las semillas hacia abajo
     global semillas
-
     for i in range(len(semillas)):
         if semillas[i].y < HEIGHT + 20:
             semillas[i].y += 15
@@ -198,17 +218,30 @@ def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir
-    global sprite2_x, broly_health, player_health,desconvertido,teles,victoria
+    global sprite2_x, broly_health, player_health,desconvertido,teles,victoria,firstTime
  
+
+    #Moviendo las semillas del ermitaño con sistema de probalididad + aleatoriedad.
     probabilidad_semilla = random.randint(1,50)
-    if probabilidad_semilla == 20:
+    if probabilidad_semilla == 20 and  player_health <= 50:
         mover_semillas()
 
+
+    #Reproducir dialogo entre Krilin y Goku cuando este nececita semillas.
+    for i in range(len(semillas)):
+        if semillas[i].y >= 0 and firstTime == True:
+            sonido_pide.play()
+            firstTime = False
+
+
+    #Verifica colision con las semillas del ermitaño.
 
     colision_semilla = kameha[current_sprite].collidelist(semillas)
 
     if colision_semilla != -1:
+        sonido_curar.play()
         semillas.pop(colision_semilla)
+        player_health += 20
     
     
     # Actualiza la posición de los kameha de carga
@@ -328,26 +361,29 @@ def update(dt):
     # Detectar colisiones entre Broly y los ataques del personaje principal
     if (attack == 1 or peleando == 1) and brolys[current_sprite5].colliderect(kameha[current_sprite]):
         golpeando_sound.play()
+        sonido_muere.play()
         
         
+        #Broly sigue a Goku.
         if dir == "left":
             sprite2_x -= random.randint(2,4)
         elif dir == "right":
             sprite2_x += random.randint(2,4)
-       
 
+        #Restando via a Broly con los ataques de Goku   
         if peleando == 1:
-            broly_health -= random.random() * 6
+            broly_health -= random.random() * 3
         elif attack == 1: 
-            broly_health -= random.random() * 6
+            broly_health -= random.random() * 3
 
+        #Verifica si derrotamos a Broly.
         if broly_health <= 1:
             broly_peleando = 0  # Broly ha sido derrotado
             desconvertido = 1
-            sonido_muere.play()
-            #victoria = 1
+            victoria = 1
 
-    if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1:
+    #Verifica colision con Broly y los ataques de Goku
+    if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1 and player_health>=0:
         player_health -= random.random()
 
 # Dibuja los kameha en la pantalla
@@ -356,64 +392,82 @@ def draw():
     global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x , victoria  ,sprite_reproducido
     screen.clear()
 
-    #SI DERROTE A BROLY
+    #CONDICIONAL: SI LLEGUE A DERROTAR A BROLY
     if victoria == 0:
 
+        #Dibujando fondo1
         fondo.draw()
 
+        #Dibujado de las semillas del ermitaño
         for i in range(len(semillas)):
             semillas[i].draw()
             
         if carga == 1:
+            #Animacion de la carga de Goku.
             cargas[current_sprite2].draw()
         if attack == 1:
+            #Animacion del Kamehame-ha!, en ambas direcciones
             if dir == "right":
-                print(len(kameha))
                 kameha[current_sprite].draw()
             elif dir == "left":
-                print(len(kameha_izq))
                 kameha_izq[current_sprite].draw()
 
+
+        #Animacion cuando salto
         elif saltando == 1:
             kameha[0].draw()
+
         elif peleando == 1:
 
+            #Animacion de ataque fisico #1 hacia los lados
             if dir == "right":
                 peleas[current_sprite3].draw()
             elif dir == "left":
                 peleas_left[current_sprite3].draw()
 
+        #Animacion y traslado de teletransportacion
         elif teletransportacion == 1:
             teles[current_sprite4].draw()
             sprite_x = sprite2_x + 10
         else:
-
+            
+            #Girar hacia los estados, estando estatico.
             if dir == "left" and peleando == 0:
                 kameha_izq[0].draw()
             elif dir == "right" and peleando == 0:
                 kameha[0].draw()
         
-        if broly_health > 0:
+        #Animacion de ataque de Broly
+        if broly_health > 0 and player_health >= 0:
             if sprite2_x > sprite_x:
                 brolys[current_sprite5].draw()
             elif sprite2_x < sprite_x:
                 brolys_right[current_sprite5].draw()
+        
+        #Broly cambia de postura al ganar.
+        elif player_health<=0:
+            brolys_right[5].draw()
+
         else:
-            if desconvertido == 1 and not sprite_reproducido:
-                                
+            if victoria == 1 and not sprite_reproducido:
+    
                 broly_desconvertido[current_sprite6].draw()
                 sprite_reproducido = True
             else:
                 broly_desconvertido[3].draw()
 
             broly_peleando = 0
-            #brolys[1].draw()  # Dibuja la imagen de Broly derrotado (puede cambiarse según la imagen de derrota)
+            
         
         # Dibujar las barras de salud
         draw_health_bar("Player", player_health, 10, 30, (255, 0, 0))
         draw_health_bar("Broly", broly_health, WIDTH - 280, 30, (0, 255, 0))
+
+
     elif victoria == 1:
+        
         ganaste.draw()
+        sonido_final_goku.play()
 
 
 
