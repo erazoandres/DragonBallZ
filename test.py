@@ -1,5 +1,6 @@
 import pgzrun
 import random
+import math
 import os 
 
 
@@ -21,9 +22,20 @@ sprite_y = 470
 sprite2_x = 600
 sprite2_y = 450
 
+
+# Configuración de la curva
+t = 0  # Variable de tiempo para el movimiento
+t2 = 0
+amplitud = 10  # Amplitud de la curva (altura de la onda)
+frecuencia = 0.05  # Frecuencia de la curva (anchura de la onda)
+velocidad = 2  # Velocidad de movimiento a lo largo del eje x
+
 # Carga de Actores
 tele1 = Actor("tele0.png")
 fondo = Actor("c.jpeg")
+
+nube = Actor("nube", pos = (10,0))
+nave = Actor("nave",pos = (10,0))
 
 ganaste = Actor("win.jpeg")
 tele2 = Actor("tele1.png")
@@ -147,10 +159,14 @@ teletransportacion = 0
 broly_peleando = 1
 desconvertido = 0
 victoria = 0
+elemento_volador = 0
 sprite_reproducido = False
 firstTime = True
 firstTimeMusic = True
 firstTimeEndBattle = True
+
+trayectoNave = False
+trayectoNube = True
 
 # Direccion de personaje princial, Papucho Goku! :)
 dir = "right"
@@ -226,8 +242,10 @@ def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir
-    global sprite2_x, broly_health, player_health,desconvertido,teles,victoria,firstTime
- 
+    global sprite2_x, broly_health, player_health,desconvertido,teles,victoria,firstTime,t,t2
+
+    t += velocidad
+    t2 += velocidad
 
     #Moviendo las semillas del ermitaño con sistema de probalididad + aleatoriedad.
     probabilidad_semilla = random.randint(1,50)
@@ -400,19 +418,36 @@ def update(dt):
     if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1 and player_health>=0:
         player_health -= random.random()
 
-# Dibuja los kameha en la pantalla
+def elemento_volador_aleatorio():
+    global elemento_volador
+
+    elemento_volador = random.randint(1,100)
+
 
 def draw():
 
     global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x , victoria  ,sprite_reproducido,firstTimeEndBattle
-    global goku_derrotado
+    global goku_derrotado,elemento_volador,trayectoNave,trayectoNube
+    global t2
     screen.clear()
-
-    #CONDICIONAL: SI LLEGUE A DERROTAR A BROLY
+    
     if victoria == 0:
 
         #Dibujando fondo1
         fondo.draw()
+        
+        elemento_volador = random.randint(1,300)
+
+        if trayectoNube == True:
+            nube.draw()
+            nube.x = t
+            nube.y = 90 + amplitud * math.sin(frecuencia * t)
+
+        if trayectoNave == False and nube.x > 500:
+            nave.draw()
+            nave.x= t2
+            nave.y = 50 + amplitud * math.sin(frecuencia * t2)
+            
 
         #Dibujado de las semillas del ermitaño
         for i in range(len(semillas)):
