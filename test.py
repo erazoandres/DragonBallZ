@@ -23,7 +23,10 @@ sprite2_x = 600
 sprite2_y = 450
 
 center_x = WIDTH // 2
-center_y = 110
+center_y = 100
+
+center_menu_broly_goku_x = WIDTH // 2
+center_menu_broly_goku_y = 500
 
 x_goku_menu = 200
 y_goku_menu = 470
@@ -34,7 +37,7 @@ y_broly_menu = 483
 # Configuración de la curva
 t = 0  # Variable de tiempo para el movimiento
 t2 = 0
-amplitud = 10  # Amplitud de la curva (altura de la onda)
+amplitud = 6  # Amplitud de la curva (altura de la onda)
 frecuencia = 0.05  # Frecuencia de la curva (anchura de la onda)
 velocidad = 2  # Velocidad de movimiento a lo largo del eje x
 
@@ -43,7 +46,7 @@ tele1 = Actor("tele0.png",)
 goku_menu = Actor("goku_menu.png",(x_goku_menu,y_goku_menu))
 broly_menu = Actor("broly_menu.png",(x_broly_menu,y_broly_menu))
 fondo = Actor("c.jpeg")
-menu = Actor("menu.jpeg")
+menu_wall = Actor("menu.jpeg")
 logo = Actor("logo.png",(center_x  , center_y))
 nube = Actor("nube", pos = (10,0))
 nave = Actor("nave",pos = (10,0))
@@ -233,8 +236,8 @@ elif modo_juego == "juego":# Reproduce el sonido de fondo principal
     music.play("sound.mp3")
     music.set_volume(0.1)
 
-#Dibujando los rectangulos de la vida de ambos personajes.
 def draw_health_bar(name, health, x, y, color):
+    #Dibujando los rectangulos de la vida de ambos personajes.
     screen.draw.text(name, (x, y - 20), color="white")
     bar_width = 100
     bar_height = 20
@@ -260,9 +263,16 @@ def animacion_logo_menu():
     # Ajusta la posición del logo
     logo.y = center_y + desplazamiento_y
         
+def animacion_goky_broly():
+    global tiempo
+    # Incrementa el tiempo
+    tiempo += 1
+    # Calcula el desplazamiento en y usando una función seno
+    desplazamiento2_y = (amplitud -8) * math.sin(frecuencia * tiempo)
+    # Ajusta la posición del logo
+    goku_menu.y = (center_menu_broly_goku_y + desplazamiento2_y) - 10
+    broly_menu.y = center_menu_broly_goku_y + desplazamiento2_y
 
-
-# Actualiza las posiciones y la animación
 def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6
@@ -448,7 +458,6 @@ def update(dt):
     elif modo_juego == "menu":
         animacion_logo_menu()
 
-
 def elemento_volador_aleatorio():
     global elemento_volador
 
@@ -556,12 +565,16 @@ def draw():
             sonido_final_goku.play()
             #firstTimeEndBattle  = False
     elif modo_juego == "menu":
-        menu.draw()
+        menu_wall.draw()
         logo.draw()
         goku_menu.draw()
         broly_menu.draw()
+        animacion_goky_broly()
 
 
-     
+def on_mouse_down(pos):
+    global modo_juego
+    if goku_menu.collidepoint(pos):
+        modo_juego = "juego"
 
 pgzrun.go()
