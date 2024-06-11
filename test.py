@@ -48,17 +48,17 @@ broly_energy = 0
 energy_max = 100
 
 # Carga de Actores
-tele1 = Actor("tele0.png",)
-goku_menu = Actor("goku_menu.png",(x_goku_menu,y_goku_menu))
 broly_menu = Actor("broly_menu.png",(x_broly_menu,y_broly_menu))
-fondo = Actor("c.jpeg")
-menu_wall = Actor("menu.jpeg")
-logo = Actor("logo.png",(center_x  , center_y))
-nube = Actor("nube.png", pos = (10,0))
+goku_menu = Actor("goku_menu.png",(x_goku_menu,y_goku_menu))
+logo = Actor("logo.png",(center_x  , center_y)) # type: ignore
+nube = Actor("nube.png", pos = (10,0)) # type: ignore
 nave = Actor("nave.png",pos = (10,0))
+menu_wall = Actor("menu.jpeg")
+tele1 = Actor("tele0.png",)
+fondo = Actor("c.jpeg")
 
-ganaste = Actor("win.jpeg")
 perdiste = Actor("derrota.jpeg")
+ganaste = Actor("win.jpeg")
 
 tele2 = Actor("tele1.png")
 tele3 = Actor("tele2.png")
@@ -207,53 +207,56 @@ broly_health = 180
 player_health = 150
 
 
-# Cargar y reproduccion de sonidos
+def sonidos():
+    # Cargar y reproduccion de sonidos
 
-#Efectos de sonido del juego en .wav
-tele_sound = sounds.sonidotransportacion  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
-tele_sound.set_volume(0.1)
+    global tele_sound,golpeando_sound,kame_sound,salto_sound,sonido_carga,sonido_muere
+    global sonido_curar,sonido_pide,sonido_final_goku,sonido_grito_goku,sonido_efecto
 
-golpeando_sound = sounds.sonidogolpeando  # Asegúrate de que el archivo golpeando.wav está en la carpeta sounds
-golpeando_sound.set_volume(0.1)
+    #Efectos de sonido del juego en .wav
+    tele_sound = sounds.sonidotransportacion  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
+    tele_sound.set_volume(0.1)
 
-kame_sound = sounds.sonidokame  # Asegúrate de que el archivo kame.wav está en la carpeta sounds
-kame_sound.set_volume(0.1)
+    golpeando_sound = sounds.sonidogolpeando  # Asegúrate de que el archivo golpeando.wav está en la carpeta sounds
+    golpeando_sound.set_volume(0.1)
 
-salto_sound = sounds.sonidosalto # Asegúrate de que el archivo kame.wav está en la carpeta sounds
-salto_sound.set_volume(0.1)
+    kame_sound = sounds.sonidokame  # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+    kame_sound.set_volume(0.1)
 
-sonido_carga = sounds.sonidocarga # Asegúrate de que el archivo kame.wav está en la carpeta sounds
-sonido_carga.set_volume(0.1)
+    salto_sound = sounds.sonidosalto # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+    salto_sound.set_volume(0.1)
 
-
-sonido_muere = sounds.muere # Asegúrate de que el archivo kame.wav está en la carpeta sounds
-sonido_muere.set_volume(0.1)
-
-sonido_curar = sounds.sonidocurar # Asegúrate de que el archivo curar.wav está en la carpeta sounds
-sonido_curar.set_volume(0.3)
-
-sonido_pide = sounds.sonidopidesemilla # Asegúrate de que el archivo pide.wav está en la carpeta sounds
-sonido_pide.set_volume(0.6)
-
-sonido_final_goku = sounds.sonidofinalgoku # Asegúrate de que el archivo final.wav está en la carpeta sounds
-sonido_final_goku.set_volume(0.6)
-
-sonido_grito_goku = sounds.gritogoku # Asegúrate de que el archivo grito.wav está en la carpeta sounds
-sonido_grito_goku.set_volume(1.5)
-
-sonido_efecto = sounds.efectomenu # Asegúrate de que el archivo curar.wav está en la carpeta sounds
-sonido_efecto.set_volume(1.5)
+    sonido_carga = sounds.sonidocarga # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+    sonido_carga.set_volume(0.1)
 
 
-if modo_juego == "menu":
-    music.play("musicmenu.mp3")
-    music.set_volume(1)
-elif modo_juego == "juego":
-    music.play("sound.mp3")
+    sonido_muere = sounds.muere # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+    sonido_muere.set_volume(0.1)
+
+    sonido_curar = sounds.sonidocurar # Asegúrate de que el archivo curar.wav está en la carpeta sounds
+    sonido_curar.set_volume(0.3)
+
+    sonido_pide = sounds.sonidopidesemilla # Asegúrate de que el archivo pide.wav está en la carpeta sounds
+    sonido_pide.set_volume(0.6)
+
+    sonido_final_goku = sounds.sonidofinalgoku # Asegúrate de que el archivo final.wav está en la carpeta sounds
+    sonido_final_goku.set_volume(0.6)
+
+    sonido_grito_goku = sounds.gritogoku # Asegúrate de que el archivo grito.wav está en la carpeta sounds
+    sonido_grito_goku.set_volume(1.5)
+
+    sonido_efecto = sounds.efectomenu # Asegúrate de que el archivo curar.wav está en la carpeta sounds
+    sonido_efecto.set_volume(1.5)
 
 
-# Dibuja la barra de energía en la pantalla
+    if modo_juego == "menu":
+        music.play("musicmenu.mp3")
+        music.set_volume(1)
+    elif modo_juego == "juego":
+        music.play("sound.mp3")
+
 def draw_energy_bar(x, y, energy, max_energy):
+    # Dibuja la barra de energía en la pantalla
     bar_width = 200
     bar_height = 20
     energy_percentage = energy / max_energy
@@ -633,5 +636,5 @@ def draw():
     elif modo_juego == "derrota":
         perdiste.draw()
 
-
+sonidos()
 pgzrun.go()
