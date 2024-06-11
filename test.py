@@ -299,6 +299,65 @@ def animacion_goky_broly():
     goku_menu.y = (center_menu_broly_goku_y + desplazamiento2_y) - 10
     broly_menu.y = center_menu_broly_goku_y + desplazamiento2_y
 
+def controles():
+
+    global sprite_x, sprite_y, player_energy,carga,dir,saltando,attack,current_sprite,peleando,teletransportacion
+# Movimiento del personaje principal
+    if keyboard.d and sprite_x<WIDTH - 16:
+        sprite_x += 2
+        dir = "right"
+    elif keyboard.a and sprite_x>=16:
+        sprite_x -= 2
+        dir = "left"
+        
+    # Salto del personaje principal
+    if keyboard.space:
+        salto_sound.play()
+        kameha[0].y -= 150 
+        saltando = 1
+    else:
+        saltando = 0
+    
+    # Ataque del personaje principal
+    if keyboard.j and player_energy > 0:
+        print(player_energy)
+        kame_sound.play()  # Reproduce el sonido de teletransportación
+        attack = 1
+        
+        player_energy -= random.random()
+        
+    
+    else:
+        current_sprite = 0
+        attack = 0
+        
+    # Carga del personaje principal
+    if keyboard.i:
+        sonido_carga.play()
+        carga = 1
+        if player_energy < energy_max:
+            player_energy += 1
+    
+
+    else:
+        carga = 0
+        
+    # Pelea del personaje principal
+    if keyboard.l:
+        peleando = 1
+    else:
+        peleando = 0
+        
+    # Teletransportación del personaje principal
+    if keyboard.u:
+
+        golpeando_sound.stop()
+        tele_sound.play()  # Reproduce el sonido de teletransportación
+        teletransportacion = 1      
+    
+    else:
+        teletransportacion = 0
+
 def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,firstTimeEndBattle,switch_efecto_menu
@@ -396,62 +455,7 @@ def update(dt):
 
         if player_health>=0:
 
-            # Movimiento del personaje principal
-            if keyboard.d and sprite_x<WIDTH - 16:
-                sprite_x += 2
-                dir = "right"
-            elif keyboard.a and sprite_x>=16:
-                sprite_x -= 2
-                dir = "left"
-                
-            # Salto del personaje principal
-            if keyboard.space:
-                salto_sound.play()
-                kameha[0].y -= 150 
-                saltando = 1
-            else:
-                saltando = 0
-            
-            # Ataque del personaje principal
-            if keyboard.j and player_energy > 0:
-                print(player_energy)
-                kame_sound.play()  # Reproduce el sonido de teletransportación
-                attack = 1
-                
-                player_energy -= random.random()
-                
-            
-            else:
-                current_sprite = 0
-                attack = 0
-                
-            # Carga del personaje principal
-            if keyboard.i:
-                sonido_carga.play()
-                carga = 1
-                if player_energy < energy_max:
-                    player_energy += 1
-                if broly_energy < energy_max:
-                    broly_energy += 0
-
-            else:
-                carga = 0
-                
-            # Pelea del personaje principal
-            if keyboard.l:
-                peleando = 1
-            else:
-                peleando = 0
-                
-            # Teletransportación del personaje principal
-            if keyboard.u:
-
-                golpeando_sound.stop()
-                tele_sound.play()  # Reproduce el sonido de teletransportación
-                teletransportacion = 1      
-            
-            else:
-                teletransportacion = 0
+            controles()
             
             # Broly sigue al personaje principal con un retraso
             follow_speed = 0.007  # Ajusta esta velocidad para cambiar el retraso
