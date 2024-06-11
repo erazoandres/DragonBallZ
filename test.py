@@ -482,9 +482,9 @@ def update(dt):
             
                 #Restando via a Broly con los ataques de Goku   
                 if peleando == 1  and broly_health < 99:
-                    broly_health += random.random() * 3
+                    broly_health += random.random() 
                 elif attack == 1  and broly_health < 99: 
-                    broly_health += random.random() * 3
+                    broly_health += random.random() 
             
 
             #Verifica si derrotamos a Broly.

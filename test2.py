@@ -1,32 +1,35 @@
 import pgzrun
 
-player_health = 100
-broly_health = 0
+# Configuración de la pantalla
+WIDTH = 800
+HEIGHT = 600
 
-def draw_health_bar(name, health, x, y, color):
-    #Dibujando los rectangulos de la vida de ambos personajes.
-    screen.draw.text(name, (x, y - 20), color="white")
-    bar_width = 160
-    bar_height = 20
-    health_percentage = health / 100
-    fill_width = bar_width * health_percentage
-    screen.draw.filled_rect(Rect((x, y), (bar_width, bar_height)), (0, 255, 0))
-    screen.draw.filled_rect(Rect((x, y), (fill_width, bar_height)), color)
-    screen.draw.rect(Rect((x, y), (fill_width, bar_height)), "white")
+# Variables de transición
+fade_alpha = 255  # Opacidad inicial
+fade_direction = -1  # -1 para desvanecer, 1 para aparecer
+fade_speed = 0.5  # Velocidad del efecto de desvanecido
 
-
+# Superficie de desvanecimiento
+fade_surface = Actor("negra")
+fade_surface.pos = (WIDTH // 2, HEIGHT // 2)
 
 def draw():
-
-
-    screen.fill("blue")
-    draw_health_bar("Son Goku", player_health, 40, 30, (255, 0, 0))
-    draw_health_bar("Broly", broly_health, 462, 30, "red")
-
+    screen.clear()
+    # Aquí puedes dibujar el fondo o cualquier otro elemento que quieras que aparezca durante la transición.
+    
+    # Dibujar la superficie de desvanecido con la opacidad ajustada
+    if fade_alpha > 0:
+        screen.surface.set_alpha(fade_alpha)
+        fade_surface.draw()
+        screen.surface.set_alpha(255)  # Resetear la opacidad después de dibujar
 
 def update():
-    global broly_health
-    if keyboard.space and broly_health<=100:
-        broly_health +=1
+    global fade_alpha
 
+    if fade_alpha > 0:
+        fade_alpha += fade_direction * fade_speed
+        if fade_alpha < 0:
+            fade_alpha = 0
+
+# Iniciar el juego
 pgzrun.go()
