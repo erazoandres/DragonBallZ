@@ -50,8 +50,8 @@ energy_max = 100
 broly_menu = Actor("broly_menu.png",(x_broly_menu,y_broly_menu))
 goku_menu = Actor("goku_menu.png",(x_goku_menu,y_goku_menu))
 logo = Actor("logo.png",(center_x  , center_y)) # type: ignore
-nube = Actor("nube.png", pos = (10,0)) # type: ignore
-nave = Actor("nave.png",pos = (700,0))
+nube = Actor("nube.png", pos = (-1500,0)) # type: ignore
+nave = Actor("nave.png",pos = (1400,0))
 menu_wall = Actor("menu.jpeg")
 tele1 = Actor("tele0.png",)
 fondo = Actor("c.jpeg")
@@ -202,7 +202,7 @@ trayectoNube = True
 dir = "right"
 
 # Variables de salud
-broly_health = 180
+broly_health = 0
 player_health = 150
 
 
@@ -272,7 +272,19 @@ def draw_health_bar(name, health, x, y, color):
     fill_width = bar_width * health_percentage
     screen.draw.filled_rect(Rect((x, y), (bar_width, bar_height)), "black")
     screen.draw.filled_rect(Rect((x, y), (fill_width, bar_height)), color)
-    screen.draw.rect(Rect((x, y), (fill_width, bar_height)), "white")
+    screen.draw.rect(Rect((x, y), (fill_width, bar_height)), "blue")
+
+def draw_health_bar2(name, health, x, y, color):
+    #Dibujando los rectangulos de la vida de ambos personajes.
+    screen.draw.text(name, (x, y - 20), color="white")
+    bar_width2 = 230
+    bar_height2 = 20
+    health_percentage2 = health / 100
+    fill_width2 = bar_width2 * health_percentage2
+    screen.draw.filled_rect(Rect((x, y), (bar_width2, bar_height2)), "green")
+    screen.draw.filled_rect(Rect((x, y), (fill_width2, bar_height2)), color)
+    screen.draw.rect(Rect((x, y), (fill_width2, bar_height2)), "blue")
+    print(broly_health)
 
 def mover_semillas():
     #Moviendo las semillas hacia abajo
@@ -321,7 +333,6 @@ def controles():
     
     # Ataque del personaje principal
     if keyboard.j and player_energy > 0:
-        print(player_energy)
         if kame_sound_firstTime == True:
            
             kame_sound.play()  # Reproduce el sonido de teletransportación
@@ -470,14 +481,14 @@ def update(dt):
                     golpeando_sound.play()           
             
                 #Restando via a Broly con los ataques de Goku   
-                if peleando == 1 :
-                    broly_health -= random.random() * 3
-                elif attack == 1: 
-                    broly_health -= random.random() * 3
+                if peleando == 1  and broly_health < 99:
+                    broly_health += random.random() * 3
+                elif attack == 1  and broly_health < 99: 
+                    broly_health += random.random() * 3
             
 
             #Verifica si derrotamos a Broly.
-            if broly_health <= 1:
+            if broly_health >99:
                 broly_peleando = 0  # Broly ha sido derrotado
                 desconvertido = 1
                 modo_juego = "victoria"
@@ -509,8 +520,6 @@ def elemento_volador_aleatorio():
 def elementos_secundarios():
         
         global trayectoNave
-    
-        
 
         if elemento_volador == 1:
 
@@ -537,8 +546,9 @@ def on_mouse_down(pos):
 
 def barras():
     # Dibujar las barras de salud
-    draw_health_bar("Player", player_health, 40, 30, (255, 0, 0))
-    draw_health_bar("Broly", broly_health, 462, 30, (0, 255, 0))
+    draw_health_bar("Player", player_health, 40, 30, "green")
+    draw_health_bar2("Broly", broly_health, 520, 30, "black")
+    
     draw_energy_bar(40, 50, player_energy, energy_max)
     draw_energy_bar(550, 50, broly_energy, energy_max)
 
@@ -603,7 +613,7 @@ def draw():
                 goku_derrotado.draw()
         
         #Animacion de ataque de Broly
-        if broly_health > 0 and player_health >= 0 and broly_peleando == 1:
+        if broly_health < 150 and player_health >= 0 and broly_peleando == 1:
             if sprite2_x > sprite_x:
                 brolys[current_sprite5].draw()
             elif sprite2_x < sprite_x:
