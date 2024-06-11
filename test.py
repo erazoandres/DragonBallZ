@@ -192,7 +192,9 @@ sprite_reproducido = False
 firstTime = True
 firstTimeMusic = True
 firstTimeEndBattle = True
+kame_sound_firstTime = True
 switch_efecto_menu = True
+golpeando_sound_firsTime = True
 
 
 
@@ -215,20 +217,19 @@ def sonidos():
 
     #Efectos de sonido del juego en .wav
     tele_sound = sounds.sonidotransportacion  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
-    tele_sound.set_volume(0.1)
+    tele_sound.set_volume(0.2)
 
     golpeando_sound = sounds.sonidogolpeando  # Asegúrate de que el archivo golpeando.wav está en la carpeta sounds
-    golpeando_sound.set_volume(0.1)
+    golpeando_sound.set_volume(0.3)
 
     kame_sound = sounds.sonidokame  # Asegúrate de que el archivo kame.wav está en la carpeta sounds
-    kame_sound.set_volume(0.1)
+    kame_sound.set_volume(0.6)
 
     salto_sound = sounds.sonidosalto # Asegúrate de que el archivo kame.wav está en la carpeta sounds
-    salto_sound.set_volume(0.1)
+    salto_sound.set_volume(0.2)
 
     sonido_carga = sounds.sonidocarga # Asegúrate de que el archivo kame.wav está en la carpeta sounds
-    sonido_carga.set_volume(0.1)
-
+    sonido_carga.set_volume(0.3)
 
     sonido_muere = sounds.muere # Asegúrate de que el archivo kame.wav está en la carpeta sounds
     sonido_muere.set_volume(0.1)
@@ -251,7 +252,7 @@ def sonidos():
 
     if modo_juego == "menu":
         music.play("musicmenu.mp3")
-        music.set_volume(1)
+        music.set_volume(0.5)
     elif modo_juego == "juego":
         music.play("sound.mp3")
 
@@ -304,7 +305,7 @@ def animacion_goky_broly():
 
 def controles():
 
-    global sprite_x, sprite_y, player_energy,carga,dir,saltando,attack,current_sprite,peleando,teletransportacion
+    global sprite_x, sprite_y, player_energy,carga,dir,saltando,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime
 # Movimiento del personaje principal
     if keyboard.d and sprite_x<WIDTH - 16:
         sprite_x += 2
@@ -324,7 +325,10 @@ def controles():
     # Ataque del personaje principal
     if keyboard.j and player_energy > 0:
         print(player_energy)
-        kame_sound.play()  # Reproduce el sonido de teletransportación
+        if kame_sound_firstTime == True:
+           
+            kame_sound.play()  # Reproduce el sonido de teletransportación
+            kame_sound_firstTime = False
         attack = 1
         
         player_energy -= random.random()
@@ -365,7 +369,7 @@ def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir,firstTimeMusic
-    global sprite2_x, broly_health, player_health,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy   
+    global sprite2_x, broly_health, player_health,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime
 
     if modo_juego == "juego":
 
@@ -467,8 +471,11 @@ def update(dt):
         
             # Detectar colisiones entre Broly y los ataques del personaje principal
             if brolys[current_sprite5].colliderect(kameha[current_sprite]):
-            
-                golpeando_sound.play()
+                
+                if golpeando_sound_firsTime == True:
+                    golpeando_sound.play()
+
+                    
             
                 #Restando via a Broly con los ataques de Goku   
                 if peleando == 1 :
@@ -482,7 +489,8 @@ def update(dt):
                 broly_peleando = 0  # Broly ha sido derrotado
                 desconvertido = 1
                 modo_juego = "victoria"
-
+        else:
+            golpeando_sound_firsTime = True
         #Verifica colision con Broly y los ataques de Goku
         if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1 and player_health>=0:
             player_health -= random.random()
