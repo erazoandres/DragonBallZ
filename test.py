@@ -3,7 +3,6 @@ import random
 import math
 import os 
 
-
 # Configura el tamaño de la ventana
 WIDTH = 800
 HEIGHT = 600
@@ -43,8 +42,8 @@ velocidad = 2  # Velocidad de movimiento a lo largo del eje x
 
 
 # Variables de energía
-player_energy = 0
-broly_energy = 0
+player_energy = 100
+broly_energy = 100
 energy_max = 100
 
 # Carga de Actores
@@ -195,8 +194,6 @@ firstTimeEndBattle = True
 kame_sound_firstTime = True
 switch_efecto_menu = True
 golpeando_sound_firsTime = True
-
-
 
 trayectoNave = False
 trayectoNube = True
