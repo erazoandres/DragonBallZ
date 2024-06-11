@@ -393,10 +393,7 @@ def update(dt):
             semillas.pop(colision_semilla)
             player_health += 20
         
-        # Actualiza la posición de los kameha de carga
-        for carga in cargas:
-            carga.pos = (sprite_x + 2, sprite_y - 17)
-        
+
         # Actualiza la posición de los kameha de ataque
         for sprite in kameha:
             sprite.pos = (sprite_x, sprite_y)
@@ -564,6 +561,8 @@ def draw():
 
         if carga == 1:
             #Animacion de la carga de Goku.
+            cargas[current_sprite2].pos = kameha[0].pos
+            cargas[current_sprite2].y -= 18
             cargas[current_sprite2].draw()
 
         #Solo puede hacer el Kamehame-Ha si tiene energia
