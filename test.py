@@ -233,15 +233,14 @@ sonido_final_goku = sounds.sonidofinalgoku # Asegúrate de que el archivo curar.
 sonido_final_goku.set_volume(0.6)
 
 sonido_grito_goku = sounds.gritogoku # Asegúrate de que el archivo curar.wav está en la carpeta sounds
-sonido_grito_goku.set_volume(0.6)
+sonido_grito_goku.set_volume(1.5)
 
 
 if modo_juego == "menu":
     music.play("musicmenu.mp3")
     music.set_volume(1)
-elif modo_juego == "juego":# Reproduce el sonido de fondo principal
+elif modo_juego == "juego":
     music.play("sound.mp3")
-    music.set_volume(0.1)
 
 
 # Dibuja la barra de energía en la pantalla
@@ -294,13 +293,15 @@ def animacion_goky_broly():
 def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6
-    global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir
-    global sprite2_x, broly_health, player_health,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy
-
-    
+    global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir,firstTimeMusic
+    global sprite2_x, broly_health, player_health,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy   
 
     if modo_juego == "juego":
 
+        
+        
+        
+        
         
         t += velocidad
         t2 += velocidad
@@ -452,11 +453,11 @@ def update(dt):
                 sprite2_x += ((sprite_x - sprite2_x) * follow_speed)
         
             # Detectar colisiones entre Broly y los ataques del personaje principal
-            if (attack == 1 or peleando == 1) and brolys[current_sprite5].colliderect(kameha[current_sprite]):
+            if brolys[current_sprite5].colliderect(kameha[current_sprite]):
             
             
-                if broly_health>=0:
-                    golpeando_sound.play()
+                
+                golpeando_sound.play()
             
                 #Restando via a Broly con los ataques de Goku   
                 if peleando == 1 :
@@ -478,6 +479,16 @@ def update(dt):
 
     elif modo_juego == "menu":
         animacion_logo_menu()
+
+    elif modo_juego == "derrota" and firstTimeMusic == True:
+        
+        golpeando_sound.stop() # IMPORTANTE ! HAY QUE DETENER UN .WAV PARA QUE DEJE SONAR OTRO, ME COSTO BASTANTE DESCUBRIELO XD
+        sonido_grito_goku.play()
+        firstTimeMusic = False
+
+        
+       
+
 
 def elemento_volador_aleatorio():
     global elemento_volador
