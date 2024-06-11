@@ -8,6 +8,15 @@ WIDTH = 800
 HEIGHT = 600
 FPS = 30
 
+# Variables de transición
+fade_alpha = 255  # Opacidad inicial
+fade_direction = -1  # -1 para desvanecer, 1 para aparecer
+fade_speed = 0.5  # Velocidad del efecto de desvanecido
+
+# Superficie de desvanecimiento
+fade_surface = Actor("negra")
+fade_surface.pos = (WIDTH // 2, HEIGHT // 2)
+
 #Centrar la ventana al inicio.
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -286,13 +295,6 @@ def draw_health_bar2(name, health, x, y, color):
     screen.draw.rect(Rect((x, y), (fill_width2, bar_height2)), "blue")
     print(broly_health)
 
-def mover_semillas():
-    #Moviendo las semillas hacia abajo
-    global semillas
-    for i in range(len(semillas)):
-        if semillas[i].y < HEIGHT + 20:
-            semillas[i].y += 15
-
 def animacion_logo_menu():
     global tiempo
     # Incrementa el tiempo
@@ -374,10 +376,16 @@ def controles():
         teletransportacion = 0
 
 def update(dt):
-    global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
+    global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,fade_alpha
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir,firstTimeMusic
     global sprite2_x, broly_health, player_health,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime
+
+
+    if fade_alpha > 0:
+        fade_alpha += fade_direction * fade_speed
+        if fade_alpha < 0:
+            fade_alpha = 0
 
     if modo_juego == "juego":
 
@@ -395,14 +403,7 @@ def update(dt):
                 sonido_pide.play() 
                 firstTime = False
 
-        #Verifica colision con las semillas del ermitaño.
-
-        colision_semilla = kameha[current_sprite].collidelist(semillas)
-
-        if colision_semilla != -1:
-            sonido_curar.play()
-            semillas.pop(colision_semilla)
-            player_health += 20
+       
         
 
         # Actualiza la posición de los kameha de ataque
@@ -534,10 +535,31 @@ def elementos_secundarios():
                 nave.x -= 1
                 nave.y = 150 + amplitud * math.sin(frecuencia * t2)
 
-def mover_semillas():
-    #Dibujado de las semillas del ermitaño
+def dibujar_semillas():
     for i in range(len(semillas)):
         semillas[i].draw()
+
+def mover_semillas():
+    #Dibujado de las semillas del ermitaño
+    global semillas,firstTime,player_health
+        #Moviendo las semillas hacia abajo
+
+    contacto = kameha[current_sprite].collidelist(semillas)
+
+    if contacto != -1:
+        semillas.pop(contacto)
+        player_health = 40
+
+
+    for i in range(len(semillas)):
+        if semillas[i].y < HEIGHT + 20:
+            semillas[i].y += 15
+
+    #Reproducir dialogo entre Krilin y Goku cuando este nececita semillas.
+    for i in range(len(semillas)):
+        if semillas[i].y >= 0 and firstTime == True and player_health>=0:
+            sonido_pide.play() 
+            firstTime = False
 
 def on_mouse_down(pos):
     global modo_juego
@@ -560,6 +582,8 @@ def draw():
     
     if modo_juego == "juego":
 
+        
+
         #Dibujando fondo1
         fondo.draw()
         vs.draw()
@@ -567,7 +591,7 @@ def draw():
         avatar_broly.draw()
         avatar_goku.draw()
         elementos_secundarios()
-        mover_semillas()    
+        dibujar_semillas()
 
         if carga == 1:
             #Animacion de la carga de Goku.
@@ -633,9 +657,6 @@ def draw():
                 broly_desconvertido[3].draw()
 
             broly_peleando = 0
-            
-       
-
     elif modo_juego == "victoria":
         
         ganaste.draw()
@@ -652,6 +673,12 @@ def draw():
         broly_menu.draw()
         animacion_goky_broly()
     elif modo_juego == "derrota":
+         # Dibujar la superficie de desvanecido con la opacidad ajustada
+        if fade_alpha > 0:
+            screen.surface.set_alpha(fade_alpha)
+            fade_surface.draw()
+            screen.surface.set_alpha(255)  # Resetear la opacidad después de dibujar
+            screen.clear()
         perdiste.draw()
 
 sonidos()
