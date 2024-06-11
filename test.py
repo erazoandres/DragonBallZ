@@ -293,7 +293,6 @@ def draw_health_bar2(name, health, x, y, color):
     screen.draw.filled_rect(Rect((x, y), (bar_width2, bar_height2)), "green")
     screen.draw.filled_rect(Rect((x, y), (fill_width2, bar_height2)), color)
     screen.draw.rect(Rect((x, y), (fill_width2, bar_height2)), "blue")
-    print(broly_health)
 
 def animacion_logo_menu():
     global tiempo
@@ -382,11 +381,6 @@ def update(dt):
     global sprite2_x, broly_health, player_health,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime
 
 
-    if fade_alpha > 0:
-        fade_alpha += fade_direction * fade_speed
-        if fade_alpha < 0:
-            fade_alpha = 0
-
     if modo_juego == "juego":
 
         t += velocidad
@@ -404,8 +398,6 @@ def update(dt):
                 firstTime = False
 
        
-        
-
         # Actualiza la posición de los kameha de ataque
         for sprite in kameha:
             sprite.pos = (sprite_x, sprite_y)
@@ -499,6 +491,13 @@ def update(dt):
         #Verifica colision con Broly y los ataques de Goku
         if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1 and player_health>=0:
             player_health -= random.random()
+
+            #Retrocede cuando lo golpeo
+            if dir == "left":
+                sprite2_x -=1
+            elif dir == "right":
+                sprite2_x += 1
+            
 
     elif modo_juego == "menu":
         animacion_logo_menu()
