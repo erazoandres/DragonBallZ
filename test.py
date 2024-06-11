@@ -189,6 +189,9 @@ sprite_reproducido = False
 firstTime = True
 firstTimeMusic = True
 firstTimeEndBattle = True
+switch_efecto_menu = True
+
+
 
 trayectoNave = False
 trayectoNube = True
@@ -229,11 +232,14 @@ sonido_curar.set_volume(0.3)
 sonido_pide = sounds.sonidopidesemilla # Asegúrate de que el archivo pide.wav está en la carpeta sounds
 sonido_pide.set_volume(0.6)
 
-sonido_final_goku = sounds.sonidofinalgoku # Asegúrate de que el archivo curar.wav está en la carpeta sounds
+sonido_final_goku = sounds.sonidofinalgoku # Asegúrate de que el archivo final.wav está en la carpeta sounds
 sonido_final_goku.set_volume(0.6)
 
-sonido_grito_goku = sounds.gritogoku # Asegúrate de que el archivo curar.wav está en la carpeta sounds
+sonido_grito_goku = sounds.gritogoku # Asegúrate de que el archivo grito.wav está en la carpeta sounds
 sonido_grito_goku.set_volume(1.5)
+
+sonido_efecto = sounds.efectomenu # Asegúrate de que el archivo curar.wav está en la carpeta sounds
+sonido_efecto.set_volume(1.5)
 
 
 if modo_juego == "menu":
@@ -292,17 +298,12 @@ def animacion_goky_broly():
 
 def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6
-    global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6
+    global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir,firstTimeMusic
     global sprite2_x, broly_health, player_health,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy   
 
     if modo_juego == "juego":
 
-        
-        
-        
-        
-        
         t += velocidad
         t2 += velocidad
 
@@ -441,6 +442,8 @@ def update(dt):
                 
             # Teletransportación del personaje principal
             if keyboard.u:
+
+                golpeando_sound.stop()
                 tele_sound.play()  # Reproduce el sonido de teletransportación
                 teletransportacion = 1      
             
@@ -455,8 +458,6 @@ def update(dt):
             # Detectar colisiones entre Broly y los ataques del personaje principal
             if brolys[current_sprite5].colliderect(kameha[current_sprite]):
             
-            
-                
                 golpeando_sound.play()
             
                 #Restando via a Broly con los ataques de Goku   
@@ -480,15 +481,15 @@ def update(dt):
     elif modo_juego == "menu":
         animacion_logo_menu()
 
+        if switch_efecto_menu == True:
+            sonido_efecto.play()
+            switch_efecto_menu = False
+
     elif modo_juego == "derrota" and firstTimeMusic == True:
         
         golpeando_sound.stop() # IMPORTANTE ! HAY QUE DETENER UN .WAV PARA QUE DEJE SONAR OTRO, ME COSTO BASTANTE DESCUBRIELO XD
         sonido_grito_goku.play()
         firstTimeMusic = False
-
-        
-       
-
 
 def elemento_volador_aleatorio():
     global elemento_volador
@@ -499,7 +500,6 @@ def draw():
 
     global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle
     global goku_derrotado,elemento_volador,trayectoNave,trayectoNube, modo_juego
-    global t2
     screen.clear()
     
     if modo_juego == "juego":
@@ -597,7 +597,8 @@ def draw():
         ganaste.draw()
         if firstTimeEndBattle == True:
             sonido_final_goku.play()
-            #firstTimeEndBattle  = False
+            firstTimeEndBattle  = False
+
     elif modo_juego == "menu":
         menu_wall.draw()
         logo.draw()
@@ -606,7 +607,6 @@ def draw():
         animacion_goky_broly()
     elif modo_juego == "derrota":
         perdiste.draw()
-
 
 def on_mouse_down(pos):
     global modo_juego
