@@ -408,14 +408,13 @@ def update(dt):
                 saltando = 0
             
             # Ataque del personaje principal
-            if keyboard.j:
+            if keyboard.j and player_energy > 0:
                 print(player_energy)
                 kame_sound.play()  # Reproduce el sonido de teletransportación
                 attack = 1
-                if player_energy > 0:
-                    player_energy -= random.random()
-                if broly_energy > 0:
-                    broly_energy -= random.random()
+                
+                player_energy -= random.random()
+                
             
             else:
                 current_sprite = 0
@@ -460,10 +459,12 @@ def update(dt):
                     golpeando_sound.play()
             
                 #Restando via a Broly con los ataques de Goku   
-                if peleando == 1:
+                if peleando == 1 :
                     broly_health -= random.random() * 3
                 elif attack == 1: 
                     broly_health -= random.random() * 3
+            else:
+                peleando = 0
 
             #Verifica si derrotamos a Broly.
             if broly_health <= 1:
