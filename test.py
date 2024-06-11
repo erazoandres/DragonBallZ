@@ -52,7 +52,7 @@ broly_menu = Actor("broly_menu.png",(x_broly_menu,y_broly_menu))
 goku_menu = Actor("goku_menu.png",(x_goku_menu,y_goku_menu))
 logo = Actor("logo.png",(center_x  , center_y)) # type: ignore
 nube = Actor("nube.png", pos = (10,0)) # type: ignore
-nave = Actor("nave.png",pos = (10,0))
+nave = Actor("nave.png",pos = (700,0))
 menu_wall = Actor("menu.jpeg")
 tele1 = Actor("tele0.png",)
 fondo = Actor("c.jpeg")
@@ -183,7 +183,7 @@ peleando = 0
 teletransportacion = 0
 broly_peleando = 1
 desconvertido = 0
-elemento_volador = 0
+elemento_volador = random.randint(1,2)
 tiempo = 0
 
 modo_juego = "menu"
@@ -473,9 +473,7 @@ def update(dt):
             if brolys[current_sprite5].colliderect(kameha[current_sprite]):
                 
                 if golpeando_sound_firsTime == True:
-                    golpeando_sound.play()
-
-                    
+                    golpeando_sound.play()           
             
                 #Restando via a Broly con los ataques de Goku   
                 if peleando == 1 :
@@ -491,6 +489,7 @@ def update(dt):
                 modo_juego = "victoria"
         else:
             golpeando_sound_firsTime = True
+            golpeando_sound.stop()
         #Verifica colision con Broly y los ataques de Goku
         if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1 and player_health>=0:
             player_health -= random.random()
@@ -514,18 +513,23 @@ def elemento_volador_aleatorio():
     elemento_volador = random.randint(1,100)
 
 def elementos_secundarios():
+        
+        global trayectoNave
     
-        elemento_volador = random.randint(1,300)
+        
 
-        if trayectoNube == True:
-            nube.draw()
-            nube.x = t
-            nube.y = 90 + amplitud * math.sin(frecuencia * t)
+        if elemento_volador == 1:
 
-        if trayectoNave == False and nube.x > 500:
-            nave.draw()
-            nave.x= t2
-            nave.y = 50 + amplitud * math.sin(frecuencia * t2)
+            if  nube.x < 600:
+                nube.draw()
+                nube.x += 1
+                nube.y = 180 + amplitud * math.sin(frecuencia * t)
+
+        elif elemento_volador == 2:
+            if nave.x>0:
+                nave.draw()
+                nave.x -= 1
+                nave.y = 150 + amplitud * math.sin(frecuencia * t2)
 
 def mover_semillas():
     #Dibujado de las semillas del ermitaño
