@@ -142,12 +142,19 @@ carga1 = Actor("carga1.png")
 carga2 = Actor("carga2.png")
 carga3 = Actor("carga3.png")
 
+explosion0 = Actor("explosion0.png",(center_x  , center_y - 35))
+explosion1 = Actor("explosion1.png",(center_x  , center_y - 35))
+explosion2 = Actor("explosion2.png",(center_x  , center_y - 35))
+explosion3 = Actor("explosion3.png",(center_x  , center_y - 35))
+explosion4 = Actor("explosion4.png",(center_x  , center_y - 35))
+explosion5 = Actor("explosion5.png",(center_x  , center_y - 35))
 
 #Listas de cada animacion con  todos los actores en ellas.
 teles =  [tele1, tele2, tele3]
 cargas = [carga1, carga2, carga3]
 brolys = [broly1, broly2, broly3, broly4, broly5, broly6]
 peleas = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
+explosion = [explosion0,explosion1,explosion2,explosion3,explosion4,explosion5]
 peleas_left = [pelea1_left, pelea2_left, pelea3_left, pelea4_left, pelea5_left, pelea6_left]
 kameha = [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
 brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
@@ -171,6 +178,7 @@ current_sprite3 = 0  # pelea
 current_sprite4 = 0  # teletransportación
 current_sprite5 = 0  # broly
 current_sprite6 = 0  # broly desconvertido
+current_sprite7 = 0 # explosion del vs
 
 animation_speed = 8  # Velocidad de la animación, ajustar según necesidad
 animation_speedBroly = 16  # Velocidad de la animación, ajustar según necesidad
@@ -182,6 +190,7 @@ frame_count3 = 0
 frame_count4 = 0
 frame_count5 = 0
 frame_count6 = 0
+frame_count7 = 0
 
 # Variables de estado necesarias para controlar varios aspectos del juego
 attack = 0
@@ -375,8 +384,8 @@ def controles():
         teletransportacion = 0
 
 def update(dt):
-    global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,fade_alpha
-    global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,firstTimeEndBattle,switch_efecto_menu
+    global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7,fade_alpha
+    global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , dir,firstTimeMusic
     global sprite2_x, broly_health, player_health,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime
 
@@ -437,6 +446,7 @@ def update(dt):
         frame_count4 += 1
         frame_count5 += 1
         frame_count6 += 1
+        frame_count7 += 1
         
         # Actualiza la animación según el contador de cuadros
         if frame_count % animation_speed == 0:
@@ -456,6 +466,9 @@ def update(dt):
 
         if frame_count6 % animation_speedBroly == 0:
             current_sprite6 = (current_sprite6 + 1) % len(broly_desconvertido)
+
+        if frame_count7 % animation_speedBroly == 0:
+            current_sprite7 = (current_sprite7 + 1) % len(explosion)
         
 
         if player_health>=0:
@@ -488,7 +501,7 @@ def update(dt):
         else:
             golpeando_sound_firsTime = True
             golpeando_sound.stop()
-        #Verifica colision con Broly y los ataques de Goku
+        #Verifica  con Broly y los ataques de Goku
         if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1 and player_health>=0:
             player_health -= random.random()
 
@@ -518,21 +531,23 @@ def elemento_volador_aleatorio():
     elemento_volador = random.randint(1,100)
 
 def elementos_secundarios():
-        
-        global trayectoNave
+    
+    global trayectoNave
 
-        if elemento_volador == 1:
+    if elemento_volador == 1:
 
-            if  nube.x < 600:
-                nube.draw()
-                nube.x += 1
-                nube.y = 180 + amplitud * math.sin(frecuencia * t)
+        if  nube.x < 600:
+            nube.draw()
+            nube.x += 1
+            nube.y = 180 + amplitud * math.sin(frecuencia * t)
 
-        elif elemento_volador == 2:
+    elif elemento_volador == 2:
             if nave.x>0:
                 nave.draw()
                 nave.x -= 1
                 nave.y = 150 + amplitud * math.sin(frecuencia * t2)
+    
+    explosion[current_sprite7].draw()
 
 def dibujar_semillas():
     for i in range(len(semillas)):
@@ -581,15 +596,13 @@ def draw():
     
     if modo_juego == "juego":
 
-        
-
         #Dibujando fondo1
         fondo.draw()
+        elementos_secundarios()
         vs.draw()
         barras()    
         avatar_broly.draw()
         avatar_goku.draw()
-        elementos_secundarios()
         dibujar_semillas()
 
         if carga == 1:
