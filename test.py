@@ -72,6 +72,7 @@ tele2 = Actor("tele1.png")
 tele3 = Actor("tele2.png")
 
 vs = Actor("vs.png",(center_x  , center_y - 35))
+fight = Actor("fight.png",(center_x  , center_y + 140))
 avatar_goku = Actor("avatar_goku.png",(48,40))
 avatar_broly = Actor("avatar_broly.png",(760,40))
 broly1 = Actor("broly0.png")
@@ -598,6 +599,7 @@ def draw():
 
         #Dibujando fondo1
         fondo.draw()
+        fight.draw()
         elementos_secundarios()
         vs.draw()
         barras()    
