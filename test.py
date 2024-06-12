@@ -489,9 +489,9 @@ def update(dt):
             
                 #Restando via a Broly con los ataques de Goku   
                 if peleando == 1  and broly_health < 99:
-                    broly_health += random.random() 
+                    broly_health += random.random() / 3
                 elif attack == 1  and broly_health < 99: 
-                    broly_health += random.random() 
+                    broly_health += random.random() / 3
             
 
             #Verifica si derrotamos a Broly.
@@ -504,7 +504,7 @@ def update(dt):
             golpeando_sound.stop()
         #Verifica  con Broly y los ataques de Goku
         if brolys[current_sprite5].colliderect(kameha[current_sprite]) and broly_peleando == 1 and player_health>=0:
-            player_health -= random.random()
+            player_health -= random.random() / 3
 
             #Retrocede cuando lo golpeo
             if dir == "left":
