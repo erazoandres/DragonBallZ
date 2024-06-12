@@ -8,15 +8,6 @@ WIDTH = 800
 HEIGHT = 600
 FPS = 30
 
-# Variables de transición
-fade_alpha = 255  # Opacidad inicial
-fade_direction = -1  # -1 para desvanecer, 1 para aparecer
-fade_speed = 0.5  # Velocidad del efecto de desvanecido
-
-# Superficie de desvanecimiento
-fade_surface = Actor("negra")
-fade_surface.pos = (WIDTH // 2, HEIGHT // 2)
-
 #Centrar la ventana al inicio.
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -57,23 +48,24 @@ energy_max = 100
 
 # Carga de Actores
 broly_menu = Actor("broly_menu.png",(x_broly_menu,y_broly_menu))
-goku_menu = Actor("goku_menu.png",(x_goku_menu,y_goku_menu))
-logo = Actor("logo.png",(center_x  , center_y)) # type: ignore
-nube = Actor("nube.png", pos = (-1500,0)) # type: ignore
-nave = Actor("nave.png",pos = (1400,0))
-menu_wall = Actor("menu.jpeg")
+goku_menu =  Actor("goku_menu.png",(x_goku_menu,y_goku_menu))
+fight = Actor("fight.png",(center_x  , center_y + 140))
+logo =  Actor("logo.png",(center_x  , center_y)) # type: ignore
+nube =  Actor("nube.png", pos = (-1500,0)) # type: ignore
+nave =  Actor("nave.png",pos = (1400,0))
 tele1 = Actor("tele0.png",)
-fondo = Actor("c.jpeg")
-
+menu_wall = Actor("menu.jpeg")
+kamehouse = Actor("kamehouse.png")
+fondo =  Actor("c.jpeg")
+fondo2 = Actor("f.jpeg")
+fondo3 = Actor("v.jpeg")
+fondo4=  Actor("a.jpeg")
 perdiste = Actor("derrota.jpeg")
-ganaste = Actor("win.jpeg")
-
+ganaste =  Actor("win.jpeg")
 tele2 = Actor("tele1.png")
 tele3 = Actor("tele2.png")
-
 vs = Actor("vs.png",(center_x  , center_y - 35))
-fight = Actor("fight.png",(center_x  , center_y + 140))
-avatar_goku = Actor("avatar_goku.png",(48,40))
+avatar_goku =  Actor("avatar_goku.png",(48,40))
 avatar_broly = Actor("avatar_broly.png",(760,40))
 broly1 = Actor("broly0.png")
 broly2 = Actor("broly1.png")
@@ -89,12 +81,10 @@ broly4_right = Actor("broly3_right.png")
 broly5_right = Actor("broly4_right.png")
 broly6_right = Actor("broly5_right.png")
 
-
 broly0_desconvertido = Actor("broly0_desconvertido")
 broly1_desconvertido = Actor("broly1_desconvertido")
 broly2_desconvertido = Actor("broly2_desconvertido")
 broly3_desconvertido = Actor("broly3_desconvertido")
-
 
 pelea1 = Actor("pelea0.png")
 pelea2 = Actor("pelea1.png")
@@ -143,12 +133,12 @@ carga1 = Actor("carga1.png")
 carga2 = Actor("carga2.png")
 carga3 = Actor("carga3.png")
 
-explosion0 = Actor("explosion0.png",(center_x  , center_y - 35))
-explosion1 = Actor("explosion1.png",(center_x  , center_y - 35))
-explosion2 = Actor("explosion2.png",(center_x  , center_y - 35))
-explosion3 = Actor("explosion3.png",(center_x  , center_y - 35))
-explosion4 = Actor("explosion4.png",(center_x  , center_y - 35))
-explosion5 = Actor("explosion5.png",(center_x  , center_y - 35))
+explosion0 = Actor("explosion0.png",(center_x +2 , center_y - 35))
+explosion1 = Actor("explosion1.png",(center_x +2 , center_y - 35))
+explosion2 = Actor("explosion2.png",(center_x +2 , center_y - 35))
+explosion3 = Actor("explosion3.png",(center_x +2 , center_y - 35))
+explosion4 = Actor("explosion4.png",(center_x +2 , center_y - 35))
+explosion5 = Actor("explosion5.png",(center_x +2 , center_y - 35))
 
 #Listas de cada animacion con  todos los actores en ellas.
 teles =  [tele1, tele2, tele3]
@@ -161,15 +151,15 @@ kameha = [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,
 brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
 broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconvertido,broly3_desconvertido]
 kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
-
+fondos = [fondo,fondo2,fondo3,fondo4]
 
 #Inicializando lista vacia de semillas, rellenada con 3.
 semillas  = [] 
-for i in range(3):
-    x = random.randint(0,WIDTH)
-    y = random.randint(0,1800)
-    semilla = Actor("./semillas/semilla.png" , (x,-y))
-    semillas.append(semilla)
+
+x = random.randint(0,WIDTH)
+y = random.randint(0,1800)
+semilla = Actor("./semillas/semilla.png" , (x,-y))
+semillas.append(semilla)
 
 
 # Variables de la animación
@@ -217,12 +207,17 @@ golpeando_sound_firsTime = True
 trayectoNave = False
 trayectoNube = True
 
+fondo_seleccionado = False
+escojer_fondo = 0
+
+timer = 0
+
 # Direccion de personaje princial, Papucho Goku! :)
 dir = "right"
 
 # Variables de salud
 broly_health = 0
-player_health = 150
+player_health = 1
 
 
 def sonidos():
@@ -271,6 +266,13 @@ def sonidos():
         music.set_volume(0.5)
     elif modo_juego == "juego":
         music.play("sound.mp3")
+
+def terminar_juego():
+    from pgzero.clock import clock
+    global modo_juego
+    clock.schedule(terminar_juego, 5.0)
+    modo_juego = "derrota"
+    fondo.draw()
 
 def draw_energy_bar(x, y, energy, max_energy):
     # Dibuja la barra de energía en la pantalla
@@ -397,8 +399,8 @@ def update(dt):
         t2 += velocidad
 
         #Moviendo las semillas del ermitaño con sistema de probalididad + aleatoriedad.
-        probabilidad_semilla = random.randint(1,50)
-        if probabilidad_semilla == 20 and  player_health <= 50:
+        probabilidad_semilla = random.randint(1,30)
+        if probabilidad_semilla == 15 and  player_health <= 50:
             mover_semillas()
 
         #Reproducir dialogo entre Krilin y Goku cuando este nececita semillas.
@@ -521,10 +523,10 @@ def update(dt):
             switch_efecto_menu = False
 
     elif modo_juego == "derrota" and firstTimeMusic == True:
-        
         golpeando_sound.stop() # IMPORTANTE ! HAY QUE DETENER UN .WAV PARA QUE DEJE SONAR OTRO, ME COSTO BASTANTE DESCUBRIELO XD
         sonido_grito_goku.play()
         firstTimeMusic = False
+        
 
 def elemento_volador_aleatorio():
     global elemento_volador
@@ -563,7 +565,7 @@ def mover_semillas():
 
     if contacto != -1:
         semillas.pop(contacto)
-        player_health = 40
+        player_health = 100
 
 
     for i in range(len(semillas)):
@@ -591,14 +593,20 @@ def barras():
 
 def draw():
 
-    global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle
-    global goku_derrotado,elemento_volador,trayectoNave,trayectoNube, modo_juego
+    global current_sprite6 , broly_peleando , kameha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,escojer_fondo
+    global goku_derrotado,elemento_volador,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado
+    
     screen.clear()
     
     if modo_juego == "juego":
 
         #Dibujando fondo1
-        fondo.draw()
+        
+        if fondo_seleccionado == False:
+            escojer_fondo = random.choice(fondos)
+            fondo_seleccionado = True
+        
+        escojer_fondo.draw()
         fight.draw()
         elementos_secundarios()
         vs.draw()
@@ -658,10 +666,9 @@ def draw():
                 brolys_right[current_sprite5].draw()
         
         #Broly cambia de postura al ganar.
-        elif player_health<=0:
-            modo_juego = "derrota"
-            brolys_right[5].draw()
+        elif player_health<=3:
             
+            brolys_right[5].draw()
         else:
             if modo_juego == "victoria" and not sprite_reproducido:
     
@@ -687,13 +694,9 @@ def draw():
         broly_menu.draw()
         animacion_goky_broly()
     elif modo_juego == "derrota":
-         # Dibujar la superficie de desvanecido con la opacidad ajustada
-        if fade_alpha > 0:
-            screen.surface.set_alpha(fade_alpha)
-            fade_surface.draw()
-            screen.surface.set_alpha(255)  # Resetear la opacidad después de dibujar
-            screen.clear()
         perdiste.draw()
+    elif modo_juego == "dialogos":
+        kamehouse.draw()
 
 sonidos()
 pgzrun.go()
