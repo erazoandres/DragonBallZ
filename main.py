@@ -203,6 +203,7 @@ frame_count8 = 0
 
 # Variables de estado necesarias para controlar varios aspectos del juego
 attack = False
+attack_recargado = False
 carga = 0
 saltando = False
 peleando = False
@@ -224,7 +225,6 @@ golpeando_sound_firsTime = True
 
 trayectoNave = False
 trayectoNube = True
-
 
 fondo_seleccionado = False
 indice_fondos = 0
@@ -347,8 +347,9 @@ def logica_ataque_persecucion():
 
 def controles():
 
-    global sprite_x, sprite_y, player_energy,carga,direccion_goku,saltando,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime
+    global sprite_x, sprite_y, player_energy,carga,direccion_goku,saltando,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
     # Movimiento del personaje principal
+    
     if keyboard.d and sprite_x<WIDTH - 16:
         sprite_x += 2
         direccion_goku = "right"
@@ -356,6 +357,11 @@ def controles():
         sprite_x -= 2
         direccion_goku = "left"
         
+    if keyboard.p:
+        attack_recargado = True
+    else:
+        attack_recargado = False
+
     # Salto del personaje principal
     if keyboard.space:
         salto_sound.play()
@@ -372,9 +378,7 @@ def controles():
             kame_sound_firstTime = False
         attack = 1
         
-        player_energy -= random.random()
-        
-    
+        player_energy -= random.random()  
     else:
         current_sprite = 0
         attack = 0
@@ -385,8 +389,6 @@ def controles():
         carga = 1
         if player_energy < energy_max:
             player_energy += 1
-    
-
     else:
         carga = 0
         
@@ -648,7 +650,10 @@ def draw():
             if direccion_goku == "right" and salud_goku>=0 :
                 sprite_goku_kamehameha[current_sprite].draw()
             elif direccion_goku == "left" and salud_goku>=0 :
-                kameha_izq[current_sprite].draw()          
+                kameha_izq[current_sprite].draw()   
+
+        elif attack_recargado == 1:
+            kameha_recargado[current_sprite8].draw()
 
         #Animacion cuando salto
         elif saltando == 1:
