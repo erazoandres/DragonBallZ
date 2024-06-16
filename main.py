@@ -118,6 +118,20 @@ kameha7 = Actor("./sprites/goku/kamehameha/derecha/goku7.png")
 kameha8 = Actor("./sprites/goku/kamehameha/derecha/goku8.png")
 kameha9 = Actor("./sprites/goku/kamehameha/derecha/goku9.png")
 
+kameha_recargado1 = Actor("./sprites/goku/kamehameha2/kamehameha2_1.png")
+kameha_recargado2 = Actor("./sprites/goku/kamehameha2/kamehameha2_2.png")
+kameha_recargado3 = Actor("./sprites/goku/kamehameha2/kamehameha2_3.png")
+kameha_recargado4 = Actor("./sprites/goku/kamehameha2/kamehameha2_4.png")
+kameha_recargado5 = Actor("./sprites/goku/kamehameha2/kamehameha2_5.png")
+kameha_recargado6 = Actor("./sprites/goku/kamehameha2/kamehameha2_6.png")
+kameha_recargado7 = Actor("./sprites/goku/kamehameha2/kamehameha2_7.png")
+kameha_recargado8 = Actor("./sprites/goku/kamehameha2/kamehameha2_8.png")
+kameha_recargado9 = Actor("./sprites/goku/kamehameha2/kamehameha2_9.png")
+kameha_recargado10 = Actor("./sprites/goku/kamehameha2/kamehameha2_10.png")
+kameha_recargado11 = Actor("./sprites/goku/kamehameha2/kamehameha2_11.png")
+kameha_recargado12 = Actor("./sprites/goku/kamehameha2/kamehameha2_12.png")
+kameha_recargado13 = Actor("./sprites/goku/kamehameha2/kamehameha2_13.png")
+
 kameha1_izq = Actor("./sprites/goku/kamehameha/izquierda/goku1_left.png")
 kameha2_izq = Actor("./sprites/goku/kamehameha/izquierda/goku2_left.png")
 kameha3_izq = Actor("./sprites/goku/kamehameha/izquierda/goku3_left.png")
@@ -151,6 +165,7 @@ brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_r
 broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconvertido,broly3_desconvertido]
 kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
 fondos = [fondo,fondo2,fondo3,fondo4]
+kameha_recargado = [kameha_recargado1,kameha_recargado2,kameha_recargado3,kameha_recargado4,kameha_recargado5,kameha_recargado6,kameha_recargado7,kameha_recargado8,kameha_recargado9,kameha_recargado10,kameha_recargado11,kameha_recargado12,kameha_recargado13]
 
 #Inicializando lista vacia de semillas, rellenada con 3.
 semillas  = [] 
@@ -170,6 +185,8 @@ current_sprite4 = 0  # teletransportación
 current_sprite5 = 0  # broly
 current_sprite6 = 0  # broly desconvertido
 current_sprite7 = 0 # explosion del vs
+current_sprite8 = 0 # kamehameha recargado
+
 
 animation_speed = 8  # Velocidad de la animación, ajustar según necesidad
 animation_speedBroly = 16  # Velocidad de la animación, ajustar según necesidad
@@ -182,6 +199,7 @@ frame_count4 = 0
 frame_count5 = 0
 frame_count6 = 0
 frame_count7 = 0
+frame_count8 = 0
 
 # Variables de estado necesarias para controlar varios aspectos del juego
 attack = False
@@ -392,7 +410,7 @@ def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
-    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime
+    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,frame_count8,current_sprite8
 
     if modo_juego == "juego":
         t += velocidad
@@ -438,6 +456,10 @@ def update(dt):
         # Actualiza la posición de la destransformacion de broly
         for pelea in peleas_left:
             pelea.pos = (sprite_x, sprite_y)
+
+        # Actualiza la posición de la destransformacion de broly
+        for kamehameha in kameha_recargado:
+            kamehameha.pos = (sprite_x, sprite_y)
         
         # Incrementa el contador de cuadros
         frame_count += 1
@@ -447,6 +469,7 @@ def update(dt):
         frame_count5 += 1
         frame_count6 += 1
         frame_count7 += 1
+        frame_count8 += 8
         
         # Actualiza la animación según el contador de cuadros
         if frame_count % animation_speed == 0:
@@ -461,7 +484,7 @@ def update(dt):
         if frame_count4 % animation_speed == 0:
             current_sprite4 = (current_sprite4 + 1) % len(teles)
             
-        if frame_count5 % animation_speed == 0:
+        if frame_count5 % animation_speedBroly == 0:
             current_sprite5 = (current_sprite5 + 1) % len(brolys)
 
         if frame_count6 % animation_speedBroly == 0:
@@ -469,6 +492,9 @@ def update(dt):
 
         if frame_count7 % animation_speedBroly == 0:
             current_sprite7 = (current_sprite7 + 1) % len(explosion)
+
+        if frame_count8 % animation_speedBroly == 0:
+            current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado)
         
 
         if broly_peleando == True: 
@@ -689,7 +715,6 @@ def draw():
         perdiste.draw()
     elif modo_juego == "dialogos":
         kamehouse.draw()
-
 
 if modo_juego == "derrota":
     clock.schedule_unique(saludar, 2.0)
