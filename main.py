@@ -235,7 +235,7 @@ broly_peleando = True
 desconvertido = False
 elemento_volador_random = random.randint(1,2)
 tiempo = 0
-
+sonido_fight_reproducido = False
 modo_juego = "menu"
 
 sprite_reproducido = False
@@ -259,14 +259,19 @@ direccion_goku = "derecha"
 
 # Variables de salud
 salud_broly = 0
-salud_goku = 10
+salud_goku = 100
 
 
 def sonidos():
     # Cargar y reproduccion de sonidos
 
     global tele_sound,golpeando_sound,kame_sound,salto_sound,sonido_carga,sonido_muere
-    global sonido_curar,sonido_pide,sonido_final_goku,sonido_grito_goku,sonido_efecto
+    global sonido_curar,sonido_pide,sonido_final_goku,sonido_grito_goku,sonido_efecto,fight_sound
+
+    #Efectos de sonido del juego en .wav
+    fight_sound = sounds.audio_fight  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
+    fight_sound.set_volume(0.2)
+
 
     #Efectos de sonido del juego en .wav
     tele_sound = sounds.sonidotransportacion  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
@@ -444,9 +449,17 @@ def update(dt):
     if modo_juego == "juego":
         t += velocidad
         t2 += velocidad
+           
+
+        frame_count7 += 1
+
+        if frame_count7 % animation_speedBroly == 0:
+            current_sprite7 = (current_sprite7 + 1) % len(explosion)
+
+        
 
         if salud_goku >0 :
-      
+            controles()
             mover_semillas()
 
             #Reproducir dialogo entre Krilin y Goku cuando este nececita semillas.
@@ -502,8 +515,9 @@ def update(dt):
             frame_count4 += 1
             frame_count5 += 1
             frame_count6 += 1
-            frame_count7 += 1
+            
             frame_count8 += 1
+          
             
             # Actualiza la animación según el contador de cuadros
             if frame_count % animation_speed == 0:
@@ -524,9 +538,6 @@ def update(dt):
             if frame_count6 % animation_speedBroly == 0:
                 current_sprite6 = (current_sprite6 + 1) % len(broly_desconvertido)
 
-            if frame_count7 % animation_speedBroly == 0:
-                current_sprite7 = (current_sprite7 + 1) % len(explosion)
-
             if frame_count8 % animation_speed == 0:
                 current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado)
             
@@ -538,8 +549,7 @@ def update(dt):
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia_izquierda.png"
                     bolas_energia[i].x -=4
             
-            if salud_goku>=0:
-                controles()
+                        
 
             if broly_peleando == True: 
 
@@ -667,7 +677,10 @@ def barras():
 def draw():
     
     global current_sprite6 , broly_peleando , sprite_goku_kamehameha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
-    global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado
+    global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
+
+    
+    
 
     if modo_juego == "juego":
 
@@ -678,13 +691,21 @@ def draw():
             fondo_seleccionado = True
         
         indice_fondos.draw()
-        fight.draw()
+       
         elementos_secundarios()
         vs.draw()
         barras()    
         avatar_broly.draw()
         avatar_goku.draw()
         dibujar_semillas()
+
+        if sonido_fight_reproducido == False:
+            fight_sound.play()
+            sonido_fight_reproducido = True
+
+        if nube.x < -1400:
+            fight.draw()
+            
 
         for i in range(len(bolas_energia)):
             bolas_energia[i].draw()
@@ -772,9 +793,7 @@ def draw():
             else:
                 broly_desconvertido[3].draw()
 
-            broly_peleando = 0
-
-            
+            broly_peleando = 0    
     elif modo_juego == "victoria":
         
         ganaste.draw()
@@ -794,7 +813,8 @@ def draw():
         perdiste.draw()
     elif modo_juego == "dialogos":
         kamehouse.draw()
-
+    
+    
 def espera():
 
     x = 0
@@ -802,7 +822,6 @@ def espera():
             print(x)
             x += random.random()
 
-    terminar_juego()
 
 if modo_juego == "juego":
     clock.schedule_interval(saludar, 2.0)
