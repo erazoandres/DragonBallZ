@@ -61,6 +61,7 @@ perdiste = Actor("./elementos/estados/derrota.jpeg")
 menu_wall = Actor("./elementos/fondos/menu.jpeg")
 ganaste =  Actor("./elementos/estados/win.jpeg")
 
+
 broly1 = Actor("./sprites/broly/izquierda/broly0.png")
 broly2 = Actor("./sprites/broly/izquierda/broly1.png")
 broly3 = Actor("./sprites/broly/izquierda/broly2.png")
@@ -186,10 +187,11 @@ brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_r
 broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconvertido,broly3_desconvertido]
 kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
 fondos = [fondo,fondo2,fondo3,fondo4]
-kameha_recargado = [kameha_recargado1,kameha_recargado2,kameha_recargado3,kameha_recargado4,kameha_recargado5,kameha_recargado6,kameha_recargado7,kameha_recargado8,kameha_recargado9,kameha_recargado10,kameha_recargado11,kameha_recargado12,kameha_recargado13]
+kameha_recargado = [kameha_recargado1,kameha_recargado2,kameha_recargado3,kameha_recargado4,kameha_recargado5,kameha_recargado6,kameha_recargado7,kameha_recargado8,kameha_recargado9,kameha_recargado10,kameha_recargado11,kameha_recargado12,kameha_recargado13,kameha_recargado14,kameha_recargado15,kameha_recargado16]
 kameha_recargado_derecha = [kameha_recargado1_derecha,kameha_recargado2_derecha,kameha_recargado3_derecha,kameha_recargado4_derecha,kameha_recargado5_derecha,kameha_recargado6_derecha,kameha_recargado7_derecha,kameha_recargado8_derecha,kameha_recargado9_derecha,kameha_recargado10_derecha,kameha_recargado11_derecha,kameha_recargado12_derecha,kameha_recargado13_derecha,kameha_recargado14_derecha,kameha_recargado15_derecha,kameha_recargado16_derecha]
 #Inicializando lista vacia de semillas, rellenada con 3.
 semillas  = [] 
+bolas_energia = []
 
 x = random.randint(0,WIDTH)
 y = random.randint(0,1800)
@@ -253,7 +255,7 @@ indice_fondos = 0
 timer = 0
 
 # Direccion de personaje princial, Papucho Goku! :)
-direccion_goku = "right"
+direccion_goku = "derecha"
 
 # Variables de salud
 salud_broly = 0
@@ -368,21 +370,26 @@ def logica_ataque_persecucion():
 def controles():
 
     global sprite_x, sprite_y, player_energy,carga,direccion_goku,saltando,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
-    global current_sprite8
+    global current_sprite8,bolas_energia
     # Movimiento del personaje principal
     
     if keyboard.d and sprite_x<WIDTH - 16:
         sprite_x += 2
-        direccion_goku = "right"
+        direccion_goku = "derecha"
     elif keyboard.a and sprite_x>=16:
         sprite_x -= 2
-        direccion_goku = "left"
+        direccion_goku = "izquierda"
         
-    if keyboard.p:
+    if keyboard.o:
         attack_recargado = True
     else:
         attack_recargado = False
         current_sprite8 = 0
+
+    if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2:
+        
+        bola_energia = Actor("./sprites/goku/otros/bola_energia.png",(sprite_x,sprite_y))        
+        bolas_energia.append(bola_energia)
         
 
     # Salto del personaje principal
@@ -525,6 +532,11 @@ def update(dt):
         if frame_count8 % animation_speed == 0:
             current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado)
         
+        for i in range(len(bolas_energia)):
+            if direccion_goku == "derecha":
+                bolas_energia[i].x +=4
+           
+
         controles()
 
         if broly_peleando == True: 
@@ -568,9 +580,9 @@ def update(dt):
                         salud_goku -= random.random() / 3
 
                     #Retrocede cuando lo golpeo
-                    if direccion_goku == "left" and peleando == True or attack == True or attack_recargado == True:
+                    if direccion_goku == "izquierda" and peleando == True or attack == True or attack_recargado == True:
                         sprite2_x -=1.2
-                    elif direccion_goku == "right" and peleando == True or attack == True or attack_recargado == True:
+                    elif direccion_goku == "derecha" and peleando == True or attack == True or attack_recargado == True:
                         sprite2_x +=1.2
 
     elif modo_juego == "menu":
@@ -674,6 +686,9 @@ def draw():
         avatar_goku.draw()
         dibujar_semillas()
 
+        for i in range(len(bolas_energia)):
+            bolas_energia[i].draw()
+
         if carga == 1:
             #Animacion de la carga de Goku.
             cargas[current_sprite2].pos = sprite_goku_kamehameha[0].pos
@@ -683,16 +698,16 @@ def draw():
         #Solo puede hacer el Kamehame-Ha si tiene energia
         if attack == 1 :
             #Animacion del Kamehame-ha!, en ambas direcciones
-            if direccion_goku == "right" and salud_goku>=0 :
+            if direccion_goku == "derecha" and salud_goku>=0 :
                 sprite_goku_kamehameha[current_sprite].draw()
-            elif direccion_goku == "left" and salud_goku>=0 :
+            elif direccion_goku == "izquierda" and salud_goku>=0 :
                 kameha_izq[current_sprite].draw()   
 
         if attack_recargado == 1 :
             #Animacion del Kamehame-ha!, en ambas direcciones
-            if direccion_goku == "right" and salud_goku>=0 :
+            if direccion_goku == "derecha" and salud_goku>=0 :
                 kameha_recargado_derecha[current_sprite8].draw()
-            elif direccion_goku == "left" and salud_goku>=0 :
+            elif direccion_goku == "izquierda" and salud_goku>=0 :
                 kameha_recargado[current_sprite8].draw() 
 
      
@@ -703,9 +718,9 @@ def draw():
         elif peleando == 1:
 
             #Animacion de ataque fisico #1 hacia los lados
-            if direccion_goku == "right":
+            if direccion_goku == "derecha":
                 peleas[current_sprite3].draw()
-            elif direccion_goku == "left":
+            elif direccion_goku == "izquierda":
                 peleas_left[current_sprite3].draw()
         #Animacion y traslado de teletransportacion
         elif teletransportacion == 1:
@@ -714,9 +729,9 @@ def draw():
         else:
             
             #Girar hacia los estados, estando estatico.
-            if direccion_goku == "left" :
+            if direccion_goku == "izquierda" :
                 kameha_izq[0].draw()
-            elif direccion_goku == "right":
+            elif direccion_goku == "derecha":
                 sprite_goku_kamehameha[0].draw()
             else:
                 
