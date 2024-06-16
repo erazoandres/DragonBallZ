@@ -187,7 +187,7 @@ broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconve
 kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
 fondos = [fondo,fondo2,fondo3,fondo4]
 kameha_recargado = [kameha_recargado1,kameha_recargado2,kameha_recargado3,kameha_recargado4,kameha_recargado5,kameha_recargado6,kameha_recargado7,kameha_recargado8,kameha_recargado9,kameha_recargado10,kameha_recargado11,kameha_recargado12,kameha_recargado13]
-
+kameha_recargado_derecha = [kameha_recargado1_derecha,kameha_recargado2_derecha,kameha_recargado3_derecha,kameha_recargado4_derecha,kameha_recargado5_derecha,kameha_recargado6_derecha,kameha_recargado7_derecha,kameha_recargado8_derecha,kameha_recargado9_derecha,kameha_recargado10_derecha,kameha_recargado11_derecha,kameha_recargado12_derecha,kameha_recargado13_derecha,kameha_recargado14_derecha,kameha_recargado15_derecha,kameha_recargado16_derecha]
 #Inicializando lista vacia de semillas, rellenada con 3.
 semillas  = [] 
 
@@ -229,7 +229,7 @@ carga = 0
 saltando = False
 peleando = False
 teletransportacion = False
-broly_peleando = True
+broly_peleando = False
 desconvertido = False
 elemento_volador_random = random.randint(1,2)
 tiempo = 0
@@ -485,6 +485,10 @@ def update(dt):
         # Actualiza la posición de la animacion de ataque recargado
         for kamehameha2 in kameha_recargado:
             kamehameha2.pos = (sprite_x, sprite_y)
+
+        # Actualiza la posición de la animacion de ataque recargado
+        for kamehameha2 in kameha_recargado_derecha:
+            kamehameha2.pos = (sprite_x, sprite_y)
         
         # Incrementa el contador de cuadros
         frame_count += 1
@@ -521,10 +525,11 @@ def update(dt):
         if frame_count8 % animation_speed == 0:
             current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado)
         
+        controles()
 
         if broly_peleando == True: 
 
-            controles()
+            
             
             # Broly sigue al personaje principal con un retraso
             follow_speed = 0.007  # Ajusta esta velocidad para cambiar el retraso
@@ -683,8 +688,14 @@ def draw():
             elif direccion_goku == "left" and salud_goku>=0 :
                 kameha_izq[current_sprite].draw()   
 
-        elif attack_recargado == 1:
-            kameha_recargado[current_sprite8].draw()
+        if attack_recargado == 1 :
+            #Animacion del Kamehame-ha!, en ambas direcciones
+            if direccion_goku == "right" and salud_goku>=0 :
+                kameha_recargado_derecha[current_sprite8].draw()
+            elif direccion_goku == "left" and salud_goku>=0 :
+                kameha_recargado[current_sprite8].draw() 
+
+     
     
         #Animacion cuando salto
         elif saltando == 1:
