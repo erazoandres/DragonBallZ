@@ -118,19 +118,40 @@ kameha7 = Actor("./sprites/goku/kamehameha/derecha/goku7.png")
 kameha8 = Actor("./sprites/goku/kamehameha/derecha/goku8.png")
 kameha9 = Actor("./sprites/goku/kamehameha/derecha/goku9.png")
 
-kameha_recargado1 = Actor("./sprites/goku/kamehameha2/kamehameha2_1.png")
-kameha_recargado2 = Actor("./sprites/goku/kamehameha2/kamehameha2_2.png")
-kameha_recargado3 = Actor("./sprites/goku/kamehameha2/kamehameha2_3.png")
-kameha_recargado4 = Actor("./sprites/goku/kamehameha2/kamehameha2_4.png")
-kameha_recargado5 = Actor("./sprites/goku/kamehameha2/kamehameha2_5.png")
-kameha_recargado6 = Actor("./sprites/goku/kamehameha2/kamehameha2_6.png")
-kameha_recargado7 = Actor("./sprites/goku/kamehameha2/kamehameha2_7.png")
-kameha_recargado8 = Actor("./sprites/goku/kamehameha2/kamehameha2_8.png")
-kameha_recargado9 = Actor("./sprites/goku/kamehameha2/kamehameha2_9.png")
-kameha_recargado10 = Actor("./sprites/goku/kamehameha2/kamehameha2_10.png")
-kameha_recargado11 = Actor("./sprites/goku/kamehameha2/kamehameha2_11.png")
-kameha_recargado12 = Actor("./sprites/goku/kamehameha2/kamehameha2_12.png")
-kameha_recargado13 = Actor("./sprites/goku/kamehameha2/kamehameha2_13.png")
+kameha_recargado1_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_1.png")
+kameha_recargado2_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_2.png")
+kameha_recargado3_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_3.png")
+kameha_recargado4_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_4.png")
+kameha_recargado5_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_5.png")
+kameha_recargado6_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_6.png")
+kameha_recargado7_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_7.png")
+kameha_recargado8_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_8.png")
+kameha_recargado9_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_9.png")
+kameha_recargado10_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_10.png")
+kameha_recargado11_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_11.png")
+kameha_recargado12_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_12.png")
+kameha_recargado13_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_13.png")
+kameha_recargado14_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_11.png")
+kameha_recargado15_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_12.png")
+kameha_recargado16_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_13.png")
+ 
+ 
+kameha_recargado1 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_1.png")
+kameha_recargado2 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_2.png")
+kameha_recargado3 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_3.png")
+kameha_recargado4 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_4.png")
+kameha_recargado5 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_5.png")
+kameha_recargado6 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_6.png")
+kameha_recargado7 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_7.png")
+kameha_recargado8 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_8.png")
+kameha_recargado9 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_9.png")
+kameha_recargado10 = Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_10.png")
+kameha_recargado11 = Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_11.png")
+kameha_recargado12 = Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_12.png")
+kameha_recargado13 = Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_13.png")
+kameha_recargado14 = Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_14.png")
+kameha_recargado15 = Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_15.png")
+kameha_recargado16 = Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_16.png")
 
 kameha1_izq = Actor("./sprites/goku/kamehameha/izquierda/goku1_left.png")
 kameha2_izq = Actor("./sprites/goku/kamehameha/izquierda/goku2_left.png")
@@ -286,8 +307,7 @@ def sonidos():
     elif modo_juego == "juego":
         music.play("sound.mp3")
 
-def saludar():
-    print("hi")
+
 
 def terminar_juego():
     print("jelo")
@@ -348,6 +368,7 @@ def logica_ataque_persecucion():
 def controles():
 
     global sprite_x, sprite_y, player_energy,carga,direccion_goku,saltando,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
+    global current_sprite8
     # Movimiento del personaje principal
     
     if keyboard.d and sprite_x<WIDTH - 16:
@@ -361,6 +382,8 @@ def controles():
         attack_recargado = True
     else:
         attack_recargado = False
+        current_sprite8 = 0
+        
 
     # Salto del personaje principal
     if keyboard.space:
@@ -455,13 +478,13 @@ def update(dt):
         for broly in broly_desconvertido:
             broly.pos = (sprite2_x, sprite2_y)
 
-        # Actualiza la posición de la destransformacion de broly
+        # Actualiza la posición de ataques fisicos
         for pelea in peleas_left:
             pelea.pos = (sprite_x, sprite_y)
 
-        # Actualiza la posición de la destransformacion de broly
-        for kamehameha in kameha_recargado:
-            kamehameha.pos = (sprite_x, sprite_y)
+        # Actualiza la posición de la animacion de ataque recargado
+        for kamehameha2 in kameha_recargado:
+            kamehameha2.pos = (sprite_x, sprite_y)
         
         # Incrementa el contador de cuadros
         frame_count += 1
@@ -471,7 +494,7 @@ def update(dt):
         frame_count5 += 1
         frame_count6 += 1
         frame_count7 += 1
-        frame_count8 += 8
+        frame_count8 += 1
         
         # Actualiza la animación según el contador de cuadros
         if frame_count % animation_speed == 0:
@@ -495,7 +518,7 @@ def update(dt):
         if frame_count7 % animation_speedBroly == 0:
             current_sprite7 = (current_sprite7 + 1) % len(explosion)
 
-        if frame_count8 % animation_speedBroly == 0:
+        if frame_count8 % animation_speed == 0:
             current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado)
         
 
@@ -523,19 +546,27 @@ def update(dt):
                         golpeando_sound_firsTime = False     
                 
                     #Restando via a Broly con los ataques de Goku   
+                    esquivar = random.randint(1,3)
+                    esquivar_broly = random.randint(1,5)
+
                     if peleando == 1  and salud_broly < 99:
-                        salud_broly += random.random() / 3
+                        if esquivar_broly != 3:
+                            salud_broly += random.random() / 3
                     elif attack == 1  and salud_broly < 99: 
-                        salud_broly += random.random() / 3      
+                        if esquivar_broly != 3:
+                            salud_broly += random.random() / 3      
+                            
+                    if attack_recargado == True and salud_broly < 99:
+                        salud_broly += random.random() / 2
 
-
-                    salud_goku -= random.random() / 3
+                    if esquivar != 3:
+                        salud_goku -= random.random() / 3
 
                     #Retrocede cuando lo golpeo
-                    if direccion_goku == "left":
-                        sprite2_x -=1
-                    elif direccion_goku == "right":
-                        sprite2_x += 1
+                    if direccion_goku == "left" and peleando == True or attack == True or attack_recargado == True:
+                        sprite2_x -=1.2
+                    elif direccion_goku == "right" and peleando == True or attack == True or attack_recargado == True:
+                        sprite2_x +=1.2
 
     elif modo_juego == "menu":
         animacion_logo_menu()
@@ -654,7 +685,7 @@ def draw():
 
         elif attack_recargado == 1:
             kameha_recargado[current_sprite8].draw()
-
+    
         #Animacion cuando salto
         elif saltando == 1:
             sprite_goku_kamehameha[0].draw()
