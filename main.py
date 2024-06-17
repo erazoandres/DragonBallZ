@@ -278,7 +278,7 @@ def sonidos():
     tele_sound.set_volume(0.2)
 
     golpeando_sound = sounds.sonidogolpeando  # Asegúrate de que el archivo golpeando.wav está en la carpeta sounds
-    golpeando_sound.set_volume(0.3)
+    golpeando_sound.set_volume(0)
 
     kame_sound = sounds.sonidokame  # Asegúrate de que el archivo kame.wav está en la carpeta sounds
     kame_sound.set_volume(0.6)
@@ -611,7 +611,8 @@ def update(dt):
 def elemento_volador_aleatorio():
     global elemento_volador_random
 
-    elemento_volador_random = random.randint(1,100)
+    elemento_volador_random = 1
+    #elemento_volador_random = random.randint(1,100)
 
 def elementos_secundarios():
 
@@ -693,6 +694,7 @@ def draw():
         indice_fondos.draw()
        
         elementos_secundarios()
+
         vs.draw()
         barras()    
         avatar_broly.draw()
@@ -703,9 +705,13 @@ def draw():
             fight_sound.play()
             sonido_fight_reproducido = True
 
-        if nube.x < -1400:
+        print(nube.x , nave.x)
+
+        if nube.x < -1400 and elemento_volador_random ==1:
             fight.draw()
-            
+        else:
+            if nave.x > 1200 and elemento_volador_random ==2: 
+                fight.draw()
 
         for i in range(len(bolas_energia)):
             bolas_energia[i].draw()
