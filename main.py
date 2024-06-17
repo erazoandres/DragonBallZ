@@ -372,7 +372,7 @@ def logica_ataque_persecucion():
 def controles():
 
     global sprite_x, sprite_y, player_energy,carga,direccion_goku,saltando,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
-    global current_sprite8,bolas_energia
+    global current_sprite8,bolas_energia,saltando
     # Movimiento del personaje principal
     
     if keyboard.d and sprite_x<WIDTH - 16:
@@ -396,11 +396,14 @@ def controles():
 
     # Salto del personaje principal
     if keyboard.space:
-        salto_sound.play()
+        #salto_sound.play()
         sprite_goku_kamehameha[0].y -= 150 
-        saltando = 1
+        saltando = True
+        print(saltando , "y: " ,sprite_goku_kamehameha[0].y )
+
     else:
-        saltando = 0
+        saltando = False
+        print(saltando , "y: " ,sprite_goku_kamehameha[0].y )
     
     # Ataque del personaje principal
     if keyboard.j and player_energy > 0:
@@ -515,7 +518,6 @@ def update(dt):
             frame_count4 += 1
             frame_count5 += 1
             frame_count6 += 1
-            
             frame_count8 += 1
           
             
@@ -705,7 +707,7 @@ def draw():
             fight_sound.play()
             sonido_fight_reproducido = True
 
-        print(nube.x , nave.x)
+
 
         if nube.x < -1400 and elemento_volador_random ==1:
             fight.draw()
@@ -738,8 +740,8 @@ def draw():
                 kameha_recargado[current_sprite8].draw() 
 
         #Animacion cuando salto
-        elif saltando == 1:
-            sprite_goku_kamehameha[0].draw()
+        elif saltando == True:
+            sprite_goku_kamehameha[5].draw()
         
         elif peleando == 1:
 
