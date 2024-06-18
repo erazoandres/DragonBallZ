@@ -261,6 +261,8 @@ direccion_goku = "derecha"
 salud_broly = 0
 salud_goku = 100
 
+ataque_lanzado = False
+
 
 def sonidos():
     # Cargar y reproduccion de sonidos
@@ -371,7 +373,7 @@ def logica_ataque_persecucion():
 
 def controles():
 
-    global sprite_x, sprite_y, player_energy,carga,direccion_goku,saltando,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
+    global sprite_x, sprite_y, player_energy,carga,direccion_goku,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
     global current_sprite8,bolas_energia,saltando
     # Movimiento del personaje principal
     
@@ -386,8 +388,7 @@ def controles():
         attack_recargado = True
     else:
         attack_recargado = False
-        current_sprite8 = 0
-
+        
     if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2:
         
         bola_energia = Actor("./sprites/goku/otros/bola_energia.png",(sprite_x,sprite_y))        
@@ -397,9 +398,8 @@ def controles():
     # Salto del personaje principal
     if keyboard.space:
         #salto_sound.play()
-        sprite_goku_kamehameha[0].y -= 150 
         saltando = True
-        print(saltando , "y: " ,sprite_goku_kamehameha[0].y )
+       
 
     else:
         saltando = False
@@ -447,7 +447,7 @@ def update(dt):
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
-    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,frame_count8,current_sprite8
+    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,frame_count8,current_sprite8,ataque_lanzado
 
     if modo_juego == "juego":
         t += velocidad
@@ -457,9 +457,7 @@ def update(dt):
         frame_count7 += 1
 
         if frame_count7 % animation_speedBroly == 0:
-            current_sprite7 = (current_sprite7 + 1) % len(explosion)
-
-        
+            current_sprite7 = (current_sprite7 + 1) % len(explosion)  
 
         if salud_goku >0 :
             controles()
@@ -511,6 +509,8 @@ def update(dt):
             for kamehameha2 in kameha_recargado_derecha:
                 kamehameha2.pos = (sprite_x, sprite_y)
             
+            
+
             # Incrementa el contador de cuadros
             frame_count += 1
             frame_count2 += 1
@@ -543,16 +543,19 @@ def update(dt):
             if frame_count8 % animation_speed == 0:
                 current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado)
             
+
+            #BOLAS ENERGIA
             for i in range(len(bolas_energia)):
-                if direccion_goku == "derecha":
+                if direccion_goku == "derecha" and ataque_lanzado == False:
                     bolas_energia[i].x +=4
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia.png"
+                    ataque_lanzado = True
                 else:
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia_izquierda.png"
                     bolas_energia[i].x -=4
             
                         
-
+            #LOGICA DE BROLLY
             if broly_peleando == True: 
 
                 # Broly sigue al personaje principal con un retraso
@@ -681,7 +684,7 @@ def draw():
     
     global current_sprite6 , broly_peleando , sprite_goku_kamehameha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
-
+    global sprite_left , sprite_right
     
     
 
@@ -741,8 +744,11 @@ def draw():
 
         #Animacion cuando salto
         elif saltando == True:
-            sprite_goku_kamehameha[5].draw()
-        
+            sprite_goku_kamehameha[0].y -= 150 
+            sprite_goku_kamehameha[0].draw()
+            sprite_left.y -= 150
+            sprite_right.y -= 150
+            print(saltando , "y: " ,sprite_goku_kamehameha[0].y )
         elif peleando == 1:
 
             #Animacion de ataque fisico #1 hacia los lados
@@ -751,6 +757,7 @@ def draw():
             elif direccion_goku == "izquierda":
                 peleas_left[current_sprite3].draw()
         #Animacion y traslado de teletransportacion
+
         elif teletransportacion == 1:
             teles[current_sprite4].draw()
             sprite_x = sprite2_x + 10       
@@ -771,16 +778,13 @@ def draw():
             else:
                 #Girar hacia los estados, estando estatico.
                 if direccion_goku == "izquierda" :
-                    kameha_izq[0].draw()
+                    sprite_left.draw()
                    
             
                 elif direccion_goku == "derecha":
-                    sprite_goku_kamehameha[0].draw()
+                   sprite_right.draw()
                     
-            
-
-                
-  
+        
         #Animacion de ataque de Broly
         if salud_broly < 150 and salud_goku >= 0 and broly_peleando == 1:
             if sprite2_x > sprite_x:
@@ -821,15 +825,13 @@ def draw():
         perdiste.draw()
     elif modo_juego == "dialogos":
         kamehouse.draw()
-    
-    
+     
 def espera():
 
     x = 0
     while x <= 10000:
             print(x)
             x += random.random()
-
 
 if modo_juego == "juego":
     clock.schedule_interval(saludar, 2.0)

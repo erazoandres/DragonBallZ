@@ -1,16 +1,9 @@
-import random
+diccionario = {}
+diccionario["gohan"]   = "el que derroto a cell" 
+diccionario["vegeta"]  = "principe saiyan"
+diccionario["piccolo"] = "Padrastro de Gohan"
 
-def espera(x):
-        
-  
+descripcion = diccionario.values()
+llaves = diccionario.keys()
 
-    while x <= 10000:
-            print(x)
-            x += random.random()
-
-    print("Holi")
-
-
-x = 0
-
-espera(x)
+print(type(descripcion))
