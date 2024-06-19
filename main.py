@@ -64,6 +64,9 @@ ganaste =  Actor("./elementos/estados/win.jpeg")
 volando_izquierda = Actor("./sprites/goku/otros/volando_izquierda.png")
 volando_derecha = Actor("./sprites/goku/otros/volando_derecha.png")
 
+caminando_izquierda = Actor("./sprites/goku/otros/caminando_izquierda.png")
+caminando_derecha = Actor("./sprites/goku/otros/caminando_derecha.png")
+
 broly1 = Actor("./sprites/broly/izquierda/broly0.png")
 broly2 = Actor("./sprites/broly/izquierda/broly1.png")
 broly3 = Actor("./sprites/broly/izquierda/broly2.png")
@@ -229,6 +232,7 @@ frame_count8 = 0
 # Variables de estado necesarias para controlar varios aspectos del juego
 attack = False
 attack_recargado = False
+moviendose = False
 carga = 0
 saltando = False
 peleando = False
@@ -376,15 +380,22 @@ def logica_ataque_persecucion():
 def controles():
 
     global sprite_x, sprite_y, player_energy,carga,direccion_goku,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
-    global current_sprite8,bolas_energia,saltando
+    global current_sprite8,bolas_energia,saltando,moviendose
     # Movimiento del personaje principal
     
     if keyboard.d and sprite_x<WIDTH - 16:
         sprite_x += 2
+        moviendose = True
         direccion_goku = "derecha"
     elif keyboard.a and sprite_x>=16:
         sprite_x -= 2
         direccion_goku = "izquierda"
+        moviendose = True
+
+    else:
+        moviendose = False
+
+        
         
     if keyboard.o:
         attack_recargado = True
@@ -401,10 +412,10 @@ def controles():
     if keyboard.space:
         #salto_sound.play()
         saltando = True
-        sprite_y = 320
-        volando_izquierda.y = 320
+        sprite_y = 315
+        volando_izquierda.y = 308
         volando_izquierda.x = sprite_x
-        volando_derecha.y = 320
+        volando_derecha.y = 308
         volando_derecha.x = sprite_x
         carga = 1
        
@@ -710,7 +721,7 @@ def draw():
     
     global current_sprite6 , broly_peleando , kameha_derecha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
-    global sprite_left , sprite_right,sprite_y
+    global sprite_left , sprite_right,sprite_y,moviendose
 
     if modo_juego == "juego":
 
@@ -734,8 +745,6 @@ def draw():
             fight_sound.play()
             sonido_fight_reproducido = True
 
-
-
         if nube.x < -1400 and elemento_volador_random ==1:
             fight.draw()
         else:
@@ -752,14 +761,14 @@ def draw():
             cargando[current_sprite2].draw()
 
         #Solo puede hacer el Kamehame-Ha si tiene energia
-        if attack == 1 :
+        if attack == True :
             #Animacion del Kamehame-ha!, en ambas direcciones
             if direccion_goku == "derecha" and salud_goku>=0 :
                 kameha_derecha[current_sprite].draw()
             elif direccion_goku == "izquierda" and salud_goku>=0 :
                 kameha_izquierda[current_sprite].draw()   
 
-        elif attack_recargado == 1 :
+        elif attack_recargado == True :
             #Animacion del Kamehame-ha!, en ambas direcciones
             if direccion_goku == "derecha" and salud_goku>=0 :
                 kameha_recargado_derecha[current_sprite8].draw()
@@ -782,7 +791,7 @@ def draw():
                 volando_izquierda.draw()
                 print(saltando , "y: " ,kameha_izquierda[0].y )
           
-        elif peleando == 1:
+        elif peleando == True:
 
             #Animacion de ataque fisico #1 hacia los lados
             if direccion_goku == "derecha":
@@ -791,13 +800,24 @@ def draw():
                 goku_peleando_izquierda[current_sprite3].draw()
         #Animacion y traslado de teletransportacion
 
-        elif teletransportacion == 1:
+        elif teletransportacion == True:
             teles[current_sprite4].draw()
             sprite_x = sprite2_x + 10       
-        
+
         else:      
 
-            if salud_goku <=0:  
+            if moviendose == True:
+                if direccion_goku == "izquierda":
+                    caminando_izquierda.x = sprite_x
+                    caminando_izquierda.y = sprite_y
+                    caminando_izquierda.draw()
+                elif direccion_goku == "derecha":
+                    caminando_derecha.x = sprite_x
+                    caminando_derecha.y = sprite_y
+                    caminando_derecha.draw()
+    
+
+            if salud_goku <= 0:  
 
                 if direccion_goku == "derecha":
                     goku_derrotado.pos = (sprite2_x-50,sprite2_y+20)
@@ -810,14 +830,15 @@ def draw():
 
             else:
                 #Girar hacia los estados, estando estatico.
-                if direccion_goku == "izquierda" :
+                if direccion_goku == "izquierda" and moviendose != True:
                     sprite_left.draw()
                    
             
-                elif direccion_goku == "derecha":
+                elif direccion_goku == "derecha" and moviendose != True:
                    sprite_right.draw()
                     
-        
+        #PROGRAMACION BROLY
+
         #Animacion de ataque de Broly
         if salud_broly < 150 and salud_goku >= 0 and broly_peleando == 1:
             if sprite2_x > sprite_x:
@@ -828,7 +849,6 @@ def draw():
         #Broly cambia de postura al ganar.
         elif salud_goku<=0:
             broly_peleando_derecha[5].draw()
-            
             
         else:
             if modo_juego == "victoria" and not sprite_reproducido:
