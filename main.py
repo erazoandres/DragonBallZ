@@ -57,7 +57,8 @@ logo =  Actor("./elementos/elementos/logo.png",(center_x  , center_y))
 avatar_goku =  Actor("./elementos/elementos/avatar_goku.png",(48,40))
 nube =  Actor("./elementos/elementos/nube.png", pos = (-1500,0)) 
 nave =  Actor("./elementos/elementos/nave.png",pos = (1400,0))
-perdiste = Actor("./elementos/estados/derrota.jpeg")
+perdiste = Actor("./elementos/estados/reinicio10.jpeg")
+#perdiste = Actor("./elementos/estados/derrota.jpeg")
 menu_wall = Actor("./elementos/fondos/menu.jpeg")
 ganaste =  Actor("./elementos/estados/win.jpeg")
 
@@ -573,17 +574,22 @@ def update(dt):
                 if direccion_goku == "derecha" and ataque_lanzado == False:
                     bolas_energia[i].x +=4
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia.png"
-                    ataque_lanzado = True
-                else:
+
+                    
+                elif direccion_goku == "izquierda":
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia_izquierda.png"
                     bolas_energia[i].x -=4
+
+                if bolas_energia[i].x > WIDTH or bolas_energia[i].x < 0:
+                    bolas_energia.pop(i)
+                    ataque_lanzado = False
             
                         
             #LOGICA DE BROLLY
             if broly_peleando == True: 
 
                 # Broly sigue al personaje principal con un retraso
-                follow_speed = 0.007  # Ajusta esta velocidad para cambiar el retraso
+                follow_speed = 0.0099  # Ajusta esta velocidad para cambiar el retraso
                 if broly_peleando == 1: 
                     sprite2_x += ((sprite_x - sprite2_x) * follow_speed)
             
@@ -705,9 +711,13 @@ def mover_semillas():
                 firstTime = False
 
 def on_mouse_down(pos):
-    global modo_juego
+    global modo_juego,salud_broly,salud_goku
     if goku_menu.collidepoint(pos):
         modo_juego = "juego"
+    elif modo_juego == "derrota" and perdiste.collidepoint(pos):
+        modo_juego = "menu"
+        salud_broly = 0
+        salud_goku = 100
 
 def barras():
     # Dibujar las barras de salud
@@ -845,7 +855,7 @@ def draw():
         if salud_broly <= 100 and salud_goku > 0 :
             
 
-            if abs(sprite_x - sprite2_x) < sprite_left.width + 10 and not peleando:
+            if abs(sprite_x - sprite2_x) < sprite_left.width +30 and not peleando:
                
 
                 if sprite2_x > sprite_x:
@@ -866,6 +876,7 @@ def draw():
         #Broly cambia de postura al ganar.
         elif salud_goku<=0:
             broly_peleando_derecha[5].draw()
+            terminar_juego()
 
         
             
