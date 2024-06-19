@@ -264,8 +264,8 @@ timer = 0
 direccion_goku = "derecha"
 
 # Variables de salud
-salud_broly = 0
-salud_goku = 100
+salud_broly = 80
+salud_goku = 40
 
 ataque_lanzado = False
 
@@ -711,7 +711,7 @@ def on_mouse_down(pos):
 
 def barras():
     # Dibujar las barras de salud
-    draw_health_bar_goku("Player", salud_goku, 40, 30, "green")
+    draw_health_bar_goku("Player", salud_goku, 75, 30, "green")
     draw_health_bar_broly("Broly", salud_broly, 520, 30, "black")
     
     draw_energy_bar(40, 50, player_energy, energy_max)
@@ -721,7 +721,7 @@ def draw():
     
     global current_sprite6 , broly_peleando , kameha_derecha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
-    global sprite_left , sprite_right,sprite_y,moviendose
+    global sprite_left , sprite_right,sprite_y,moviendose,peleando
 
     if modo_juego == "juego":
 
@@ -827,28 +827,47 @@ def draw():
                     goku_derrotado.pos = (sprite2_x+50,sprite2_y+20)
                     goku_derrotado.draw()
                     
+                    
+
+
 
             else:
                 #Girar hacia los estados, estando estatico.
-                if direccion_goku == "izquierda" and moviendose != True:
+                if direccion_goku == "izquierda" and not moviendose :
                     sprite_left.draw()
-                   
-            
-                elif direccion_goku == "derecha" and moviendose != True:
+                
+                elif direccion_goku == "derecha" and not moviendose :
                    sprite_right.draw()
                     
         #PROGRAMACION BROLY
 
         #Animacion de ataque de Broly
-        if salud_broly < 150 and salud_goku >= 0 and broly_peleando == 1:
-            if sprite2_x > sprite_x:
-                broly_peleando_izquierda[current_sprite5].draw()
-            elif sprite2_x < sprite_x:
-                broly_peleando_derecha[current_sprite5].draw()
+        if salud_broly <= 100 and salud_goku > 0 :
+            
+
+            if abs(sprite_x - sprite2_x) < sprite_left.width + 10 and not peleando:
+               
+
+                if sprite2_x > sprite_x:
+                    broly_peleando_izquierda[current_sprite5].draw()
+                elif sprite2_x < sprite_x:
+                    broly_peleando_derecha[current_sprite5].draw()
+
+            else:
+
+                if sprite2_x > sprite_x:
+                    broly_peleando_izquierda[1].draw()
+                elif sprite2_x < sprite_x:
+                    broly_peleando_derecha[1].draw()
+
+                
+
         
         #Broly cambia de postura al ganar.
         elif salud_goku<=0:
             broly_peleando_derecha[5].draw()
+
+        
             
         else:
             if modo_juego == "victoria" and not sprite_reproducido:
@@ -856,7 +875,7 @@ def draw():
                 broly_desconvertido[current_sprite6].draw()
                 sprite_reproducido = True
             else:
-                broly_desconvertido[3].draw()
+                broly_desconvertido[current_sprite6].draw()
 
             broly_peleando = 0    
     elif modo_juego == "victoria":
