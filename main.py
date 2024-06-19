@@ -177,19 +177,19 @@ explosion5 = Actor("./sprites/explosion/explosion5.png",(center_x +2 , center_y 
 
 #Listas de cada animacion con  todos los actores en ellas.
 teles =  [tele1, tele2, tele3]
-cargas = [carga1, carga2, carga3]
-brolys = [broly1, broly2, broly3, broly4, broly5, broly6]
-peleas = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
+cargando = [carga1, carga2, carga3]
+goku_peleando_derecha = [pelea1, pelea2, pelea3, pelea4, pelea5, pelea6]
+goku_peleando_izquierda = [pelea1_left, pelea2_left, pelea3_left, pelea4_left, pelea5_left, pelea6_left]
 explosion = [explosion0,explosion1,explosion2,explosion3,explosion4,explosion5]
-peleas_left = [pelea1_left, pelea2_left, pelea3_left, pelea4_left, pelea5_left, pelea6_left]
-sprite_goku_kamehameha = [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
-brolys_right = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
+kameha_derecha = [sprite_right,kameha1,kameha2,kameha3,kameha4,kameha5,kameha6, kameha7,kameha9,kameha9]
+kameha_izquierda = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
+broly_peleando_izquierda = [broly1, broly2, broly3, broly4, broly5, broly6]
+broly_peleando_derecha = [broly1_right, broly2_right, broly3_right, broly4_right, broly5_right, broly6_right]
 broly_desconvertido = [broly0_desconvertido,broly1_desconvertido,broly2_desconvertido,broly3_desconvertido]
-kameha_izq = [sprite_left,kameha1_izq, kameha2_izq, kameha3_izq, kameha4_izq, kameha5_izq, kameha6_izq, kameha7_izq, kameha8_izq,  kameha9_izq]
 fondos = [fondo,fondo2,fondo3,fondo4]
-kameha_recargado = [kameha_recargado1,kameha_recargado2,kameha_recargado3,kameha_recargado4,kameha_recargado5,kameha_recargado6,kameha_recargado7,kameha_recargado8,kameha_recargado9,kameha_recargado10,kameha_recargado11,kameha_recargado12,kameha_recargado13,kameha_recargado14,kameha_recargado15,kameha_recargado16]
+kameha_recargado_izquierda = [kameha_recargado1,kameha_recargado2,kameha_recargado3,kameha_recargado4,kameha_recargado5,kameha_recargado6,kameha_recargado7,kameha_recargado8,kameha_recargado9,kameha_recargado10,kameha_recargado11,kameha_recargado12,kameha_recargado13,kameha_recargado14,kameha_recargado15,kameha_recargado16]
 kameha_recargado_derecha = [kameha_recargado1_derecha,kameha_recargado2_derecha,kameha_recargado3_derecha,kameha_recargado4_derecha,kameha_recargado5_derecha,kameha_recargado6_derecha,kameha_recargado7_derecha,kameha_recargado8_derecha,kameha_recargado9_derecha,kameha_recargado10_derecha,kameha_recargado11_derecha,kameha_recargado12_derecha,kameha_recargado13_derecha,kameha_recargado14_derecha,kameha_recargado15_derecha,kameha_recargado16_derecha]
-#Inicializando lista vacia de semillas, rellenada con 3.
+
 semillas  = [] 
 bolas_energia = []
 
@@ -399,11 +399,12 @@ def controles():
     if keyboard.space:
         #salto_sound.play()
         saltando = True
+        sprite_y = 320
        
-
     else:
         saltando = False
-        print(saltando , "y: " ,sprite_goku_kamehameha[0].y )
+        sprite_y = 460
+        
     
     # Ataque del personaje principal
     if keyboard.j and player_energy > 0:
@@ -469,28 +470,28 @@ def update(dt):
                     sonido_pide.play() 
                     firstTime = False
         
-            # Actualiza la posición de los sprite_goku_kamehameha de ataque
-            for sprite in sprite_goku_kamehameha:
+            # Actualiza la posición de los kameha_derecha de ataque
+            for sprite in kameha_derecha:
                 sprite.pos = (sprite_x, sprite_y)
 
-            # Actualiza la posición de los sprite_goku_kamehameha izquierdo de ataque
-            for sprite in kameha_izq:
+            # Actualiza la posición de los kameha_derecha izquierdo de ataque
+            for sprite in kameha_izquierda:
                 sprite.pos = (sprite_x, sprite_y)
                 
-            # Actualiza la posición de los sprite_goku_kamehameha de pelea
-            for pelea in peleas:
+            # Actualiza la posición de los kameha_derecha de pelea
+            for pelea in goku_peleando_derecha:
                 pelea.pos = (sprite_x, sprite_y)
                 
-            # Actualiza la posición de los sprite_goku_kamehameha de teletransportación
+            # Actualiza la posición de los kameha_derecha de teletransportación
             for tele in teles:
                 tele.pos = (sprite_x, sprite_y)
                 
-            # Actualiza la posición de los sprite_goku_kamehameha 
-            for broly in brolys:
+            # Actualiza la posición de los kameha_derecha 
+            for broly in broly_peleando_izquierda:
                 broly.pos = (sprite2_x, sprite2_y)
 
-            # Actualiza la posición de los sprite_goku_kamehameha 
-            for broly in brolys_right:
+            # Actualiza la posición de los kameha_derecha 
+            for broly in broly_peleando_derecha:
                 broly.pos = (sprite2_x, sprite2_y)
 
             # Actualiza la posición de la destransformacion de broly
@@ -498,11 +499,11 @@ def update(dt):
                 broly.pos = (sprite2_x, sprite2_y)
 
             # Actualiza la posición de ataques fisicos
-            for pelea in peleas_left:
+            for pelea in goku_peleando_izquierda:
                 pelea.pos = (sprite_x, sprite_y)
 
             # Actualiza la posición de la animacion de ataque recargado
-            for kamehameha2 in kameha_recargado:
+            for kamehameha2 in kameha_recargado_izquierda:
                 kamehameha2.pos = (sprite_x, sprite_y)
 
             # Actualiza la posición de la animacion de ataque recargado
@@ -523,25 +524,25 @@ def update(dt):
             
             # Actualiza la animación según el contador de cuadros
             if frame_count % animation_speed == 0:
-                current_sprite = (current_sprite + 1) % len(sprite_goku_kamehameha)
+                current_sprite = (current_sprite + 1) % len(kameha_derecha)
                 
             if frame_count2 % animation_speed == 0:
-                current_sprite2 = (current_sprite2 + 2) % len(cargas)
+                current_sprite2 = (current_sprite2 + 2) % len(cargando)
             
             if frame_count3 % animation_speed == 0:
-                current_sprite3 = (current_sprite3 + 1) % len(peleas)
+                current_sprite3 = (current_sprite3 + 1) % len(goku_peleando_derecha)
                 
             if frame_count4 % animation_speed == 0:
                 current_sprite4 = (current_sprite4 + 1) % len(teles)
                 
             if frame_count5 % animation_speedBroly == 0:
-                current_sprite5 = (current_sprite5 + 1) % len(brolys)
+                current_sprite5 = (current_sprite5 + 1) % len(broly_peleando_izquierda)
 
             if frame_count6 % animation_speedBroly == 0:
                 current_sprite6 = (current_sprite6 + 1) % len(broly_desconvertido)
 
             if frame_count8 % animation_speed == 0:
-                current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado)
+                current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado_izquierda)
             
 
             #BOLAS ENERGIA
@@ -563,14 +564,27 @@ def update(dt):
                 if broly_peleando == 1: 
                     sprite2_x += ((sprite_x - sprite2_x) * follow_speed)
             
-                
                 #Verifica si derrotamos a Broly.
                 if salud_broly > 99:
                     broly_peleando = False  # Broly ha sido derrotado
                     modo_juego = "victoria"
                 else:
                     # Detectar colisiones entre Broly y los ataques del personaje principal
-                    if brolys[current_sprite5].colliderect(sprite_goku_kamehameha[current_sprite]):
+
+
+                    if broly_peleando_derecha[current_sprite5].colliderect(kameha_derecha[current_sprite]):
+                        print("Colision kamehameha derecha")
+                    elif  broly_peleando_izquierda[current_sprite5].colliderect(kameha_izquierda[current_sprite]):
+                        print("Colision kamehameha izquierda")
+                    elif broly_peleando_derecha[current_sprite5].colliderect(kameha_izquierda[current_sprite3]):
+                        print("Colision Goku Peleando")
+                    elif broly_peleando_derecha[current_sprite5].colliderect(sprite_right):
+                        print("Colision Goku estatico derecha")
+                    elif broly_peleando_derecha[current_sprite5].colliderect(sprite_left):
+                        print("Colision Goku estatico derecha")
+
+
+                    if broly_peleando_izquierda[current_sprite5].colliderect(kameha_derecha[current_sprite]):
                         
                         if golpeando_sound_firsTime == True:
                             golpeando_sound.play()      
@@ -650,7 +664,7 @@ def mover_semillas():
         #Dibujado de las semillas del ermitaño
             #Moviendo las semillas hacia abajo
 
-        contacto = sprite_goku_kamehameha[current_sprite].collidelist(semillas)
+        contacto = kameha_derecha[current_sprite].collidelist(semillas)
 
         if contacto != -1:
             semillas.pop(contacto)
@@ -682,9 +696,9 @@ def barras():
 
 def draw():
     
-    global current_sprite6 , broly_peleando , sprite_goku_kamehameha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
+    global current_sprite6 , broly_peleando , kameha_derecha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
-    global sprite_left , sprite_right
+    global sprite_left , sprite_right,sprite_y
     
     
 
@@ -723,39 +737,47 @@ def draw():
 
         if carga == 1:
             #Animacion de la carga de Goku.
-            cargas[current_sprite2].pos = sprite_goku_kamehameha[0].pos
-            cargas[current_sprite2].y -= 18
-            cargas[current_sprite2].draw()
+            cargando[current_sprite2].pos = kameha_derecha[0].pos
+            cargando[current_sprite2].y -= 18
+            cargando[current_sprite2].draw()
 
         #Solo puede hacer el Kamehame-Ha si tiene energia
         if attack == 1 :
             #Animacion del Kamehame-ha!, en ambas direcciones
             if direccion_goku == "derecha" and salud_goku>=0 :
-                sprite_goku_kamehameha[current_sprite].draw()
+                kameha_derecha[current_sprite].draw()
             elif direccion_goku == "izquierda" and salud_goku>=0 :
-                kameha_izq[current_sprite].draw()   
+                kameha_izquierda[current_sprite].draw()   
 
         elif attack_recargado == 1 :
             #Animacion del Kamehame-ha!, en ambas direcciones
             if direccion_goku == "derecha" and salud_goku>=0 :
                 kameha_recargado_derecha[current_sprite8].draw()
             elif direccion_goku == "izquierda" and salud_goku>=0 :
-                kameha_recargado[current_sprite8].draw() 
+                kameha_recargado_izquierda[current_sprite8].draw() 
 
         #Animacion cuando salto
         elif saltando == True:
-            sprite_goku_kamehameha[0].y -= 150 
-            sprite_goku_kamehameha[0].draw()
-            sprite_left.y -= 150
-            sprite_right.y -= 150
-            print(saltando , "y: " ,sprite_goku_kamehameha[0].y )
+
+            
+           
+            if direccion_goku == "derecha":
+               
+                sprite_right.draw()
+                print(saltando , "y: " ,kameha_derecha[0].y )
+                #animate(kameha_derecha[0] , tween = "linear" , duration = 2 , y = 420)        
+            else: 
+               
+                sprite_left.draw()
+                print(saltando , "y: " ,kameha_izquierda[0].y )
+          
         elif peleando == 1:
 
             #Animacion de ataque fisico #1 hacia los lados
             if direccion_goku == "derecha":
-                peleas[current_sprite3].draw()
+                goku_peleando_derecha[current_sprite3].draw()
             elif direccion_goku == "izquierda":
-                peleas_left[current_sprite3].draw()
+                goku_peleando_izquierda[current_sprite3].draw()
         #Animacion y traslado de teletransportacion
 
         elif teletransportacion == 1:
@@ -788,13 +810,13 @@ def draw():
         #Animacion de ataque de Broly
         if salud_broly < 150 and salud_goku >= 0 and broly_peleando == 1:
             if sprite2_x > sprite_x:
-                brolys[current_sprite5].draw()
+                broly_peleando_izquierda[current_sprite5].draw()
             elif sprite2_x < sprite_x:
-                brolys_right[current_sprite5].draw()
+                broly_peleando_derecha[current_sprite5].draw()
         
         #Broly cambia de postura al ganar.
         elif salud_goku<=0:
-            brolys_right[5].draw()
+            broly_peleando_derecha[5].draw()
             
             
         else:
