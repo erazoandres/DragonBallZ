@@ -61,6 +61,8 @@ perdiste = Actor("./elementos/estados/derrota.jpeg")
 menu_wall = Actor("./elementos/fondos/menu.jpeg")
 ganaste =  Actor("./elementos/estados/win.jpeg")
 
+volando_izquierda = Actor("./sprites/goku/otros/volando_izquierda.png")
+volando_derecha = Actor("./sprites/goku/otros/volando_derecha.png")
 
 broly1 = Actor("./sprites/broly/izquierda/broly0.png")
 broly2 = Actor("./sprites/broly/izquierda/broly1.png")
@@ -400,10 +402,20 @@ def controles():
         #salto_sound.play()
         saltando = True
         sprite_y = 320
+        volando_izquierda.y = 320
+        volando_izquierda.x = sprite_x
+        volando_derecha.y = 320
+        volando_derecha.x = sprite_x
+        carga = 1
        
     else:
         saltando = False
         sprite_y = 460
+        volando_izquierda.y = 460
+        volando_izquierda.x = sprite_x
+        volando_derecha.y = 460
+        volando_derecha.x = sprite_x
+        carga = 0
         
     
     # Ataque del personaje principal
@@ -425,8 +437,8 @@ def controles():
         carga = 1
         if player_energy < energy_max:
             player_energy += 1
-    else:
-        carga = 0
+    #else:
+    #    carga = 0
         
     # Pelea del personaje principal
     if keyboard.l and salud_goku>0:
@@ -699,8 +711,6 @@ def draw():
     global current_sprite6 , broly_peleando , kameha_derecha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
     global sprite_left , sprite_right,sprite_y
-    
-    
 
     if modo_juego == "juego":
 
@@ -763,12 +773,13 @@ def draw():
            
             if direccion_goku == "derecha":
                
-                sprite_right.draw()
+                #sprite_right.draw()
+                volando_derecha.draw()
                 print(saltando , "y: " ,kameha_derecha[0].y )
                 #animate(kameha_derecha[0] , tween = "linear" , duration = 2 , y = 420)        
             else: 
                
-                sprite_left.draw()
+                volando_izquierda.draw()
                 print(saltando , "y: " ,kameha_izquierda[0].y )
           
         elif peleando == 1:
