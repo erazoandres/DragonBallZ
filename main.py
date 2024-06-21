@@ -14,6 +14,8 @@ os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 #Variables que serviran para representar y controlar la posicion de cada jugados
 
+print("Hola")
+
 #Goku
 sprite_x = 200
 sprite_y = 470
@@ -142,6 +144,17 @@ kameha_recargado14_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameh
 kameha_recargado15_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_12.png")
 kameha_recargado16_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_13.png")
  
+genkidama_goku1 = Actor("./sprites/goku/genkidama/genkidama1.png",(sprite_x,sprite_y))
+genkidama_goku2 = Actor("./sprites/goku/genkidama/genkidama2.png",(sprite_x,sprite_y))
+genkidama_goku3 = Actor("./sprites/goku/genkidama/genkidama3.png",(sprite_x,sprite_y))
+genkidama_goku4 = Actor("./sprites/goku/genkidama/genkidama4.png",(sprite_x,sprite_y))
+genkidama_goku5 = Actor("./sprites/goku/genkidama/genkidama5.png",(sprite_x,sprite_y))
+
+genkidama1 = Actor("./sprites/goku/genkidama/genkidama1_1.png")
+genkidama2 = Actor("./sprites/goku/genkidama/genkidama1_2.png")
+genkidama3 = Actor("./sprites/goku/genkidama/genkidama1_3.png")
+
+
  
 kameha_recargado1 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_1.png")
 kameha_recargado2 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_2.png")
@@ -196,6 +209,9 @@ fondos = [fondo,fondo2,fondo3,fondo4]
 kameha_recargado_izquierda = [kameha_recargado1,kameha_recargado2,kameha_recargado3,kameha_recargado4,kameha_recargado5,kameha_recargado6,kameha_recargado7,kameha_recargado8,kameha_recargado9,kameha_recargado10,kameha_recargado11,kameha_recargado12,kameha_recargado13,kameha_recargado14,kameha_recargado15,kameha_recargado16]
 kameha_recargado_derecha = [kameha_recargado1_derecha,kameha_recargado2_derecha,kameha_recargado3_derecha,kameha_recargado4_derecha,kameha_recargado5_derecha,kameha_recargado6_derecha,kameha_recargado7_derecha,kameha_recargado8_derecha,kameha_recargado9_derecha,kameha_recargado10_derecha,kameha_recargado11_derecha,kameha_recargado12_derecha,kameha_recargado13_derecha,kameha_recargado14_derecha,kameha_recargado15_derecha,kameha_recargado16_derecha]
 
+genkidama_goku = [genkidama_goku1,genkidama_goku2,genkidama_goku3,genkidama_goku4,genkidama_goku5]
+genkidama_bola = [genkidama1,genkidama2,genkidama3]
+
 semillas  = [] 
 bolas_energia = []
 
@@ -242,6 +258,7 @@ broly_peleando = True
 desconvertido = False
 elemento_volador_random = random.randint(1,2)
 tiempo = 0
+genkidama = False
 sonido_fight_reproducido = False
 modo_juego = "menu"
 
@@ -381,7 +398,7 @@ def logica_ataque_persecucion():
 def controles():
 
     global sprite_x, sprite_y, player_energy,carga,direccion_goku,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
-    global current_sprite8,bolas_energia,saltando,moviendose
+    global current_sprite8,bolas_energia,saltando,moviendose,genkidama
     # Movimiento del personaje principal
     
     if keyboard.d and sprite_x<WIDTH - 16:
@@ -392,7 +409,6 @@ def controles():
         sprite_x -= 2
         direccion_goku = "izquierda"
         moviendose = True
-
     else:
         moviendose = False
 
@@ -429,6 +445,8 @@ def controles():
         volando_derecha.x = sprite_x
         carga = 0
         
+    if keyboard.t:
+        genkidama = 1
     
     # Ataque del personaje principal
     if keyboard.j and player_energy > 0:
@@ -659,10 +677,15 @@ def update(dt):
 def elemento_volador_aleatorio():
     global elemento_volador_random
 
-    elemento_volador_random = 1
-    #elemento_volador_random = random.randint(1,100)
+    #elemento_volador_random = 1
+    elemento_volador_random = random.randint(1,100)
 
 def elementos_secundarios():
+
+    global genkidama_bola
+
+    #if genkidama == True and genkidama_bola[current_sprite2].x < 800:
+    #    genkidama_bola[current_sprite2].x += 5 
 
     if elemento_volador_random == 1:
 
@@ -678,6 +701,11 @@ def elementos_secundarios():
                 nave.y = 150 + amplitud * math.sin(frecuencia * t2)
     
     explosion[current_sprite7].draw()
+
+    #genkidama_bola[current_sprite2].pos= (sprite_x ,sprite_y)
+    #genkidama_goku[current_sprite5-1].pos = (sprite_x,sprite_y)
+    genkidama_bola[current_sprite2].x += 5
+
 
 def dibujar_semillas():
     for i in range(len(semillas)):
@@ -814,6 +842,11 @@ def draw():
             teles[current_sprite4].draw()
             sprite_x = sprite2_x + 10       
 
+        elif genkidama == True:
+           
+            genkidama_goku[current_sprite5-1].draw()
+            genkidama_bola[current_sprite2].draw()
+            
         else:      
 
             if moviendose == True:
