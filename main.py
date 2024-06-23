@@ -13,9 +13,6 @@ FPS = 30
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 #Variables que serviran para representar y controlar la posicion de cada jugados
-
-print("Hola")
-
 #Goku
 sprite_x = 200
 sprite_y = 470
@@ -150,9 +147,9 @@ genkidama_goku3 = Actor("./sprites/goku/genkidama/genkidama3.png",(sprite_x,spri
 genkidama_goku4 = Actor("./sprites/goku/genkidama/genkidama4.png",(sprite_x,sprite_y))
 genkidama_goku5 = Actor("./sprites/goku/genkidama/genkidama5.png",(sprite_x,sprite_y))
 
-genkidama1 = Actor("./sprites/goku/genkidama/genkidama1_1.png")
-genkidama2 = Actor("./sprites/goku/genkidama/genkidama1_2.png")
-genkidama3 = Actor("./sprites/goku/genkidama/genkidama1_3.png")
+genkidama1 = Actor("./sprites/goku/genkidama/genkidama1_1.png", (sprite_x-105,sprite_y - 70))
+genkidama2 = Actor("./sprites/goku/genkidama/genkidama1_2.png", (sprite_x-105,sprite_y - 70))
+genkidama3 = Actor("./sprites/goku/genkidama/genkidama1_3.png", (sprite_x-105,sprite_y - 70))
 
 
  
@@ -231,6 +228,7 @@ current_sprite5 = 0  # broly
 current_sprite6 = 0  # broly desconvertido
 current_sprite7 = 0 # explosion del vs
 current_sprite8 = 0 # kamehameha recargado
+current_sprite9 = 0 # genkidama
 
 
 animation_speed = 8  # Velocidad de la animación, ajustar según necesidad
@@ -245,6 +243,7 @@ frame_count5 = 0
 frame_count6 = 0
 frame_count7 = 0
 frame_count8 = 0
+frame_count9 = 0
 
 # Variables de estado necesarias para controlar varios aspectos del juego
 attack = False
@@ -258,6 +257,8 @@ broly_peleando = True
 desconvertido = False
 elemento_volador_random = random.randint(1,2)
 tiempo = 0
+genkidama_x = sprite_x
+genkidama_y = sprite_y
 genkidama = False
 sonido_fight_reproducido = False
 modo_juego = "menu"
@@ -445,8 +446,8 @@ def controles():
         volando_derecha.x = sprite_x
         carga = 0
         
-    if keyboard.t:
-        genkidama = 1
+    if keyboard.t and salud_broly<=150:
+        genkidama = True
     
     # Ataque del personaje principal
     if keyboard.j and player_energy > 0:
@@ -487,10 +488,12 @@ def controles():
         teletransportacion = 0
 
 def update(dt):
-    global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7
-    global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,firstTimeEndBattle,switch_efecto_menu
+    global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7,current_sprite8,current_sprite9
+    global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,frame_count8,frame_count9,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
-    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,frame_count8,current_sprite8,ataque_lanzado
+    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,ataque_lanzado
+
+    print(sprite_x , sprite_y)
 
     if modo_juego == "juego":
         t += velocidad
@@ -551,7 +554,7 @@ def update(dt):
             # Actualiza la posición de la animacion de ataque recargado
             for kamehameha2 in kameha_recargado_derecha:
                 kamehameha2.pos = (sprite_x, sprite_y)
-            
+          
             
 
             # Incrementa el contador de cuadros
@@ -562,6 +565,7 @@ def update(dt):
             frame_count5 += 1
             frame_count6 += 1
             frame_count8 += 1
+            frame_count9 += 1
           
             
             # Actualiza la animación según el contador de cuadros
@@ -585,6 +589,11 @@ def update(dt):
 
             if frame_count8 % animation_speed == 0:
                 current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado_izquierda)
+
+            if frame_count9 % animation_speed == 0:
+                current_sprite9 = (current_sprite9 + 1) % len(genkidama_bola)
+           
+          
             
 
             #BOLAS ENERGIA
@@ -617,20 +626,6 @@ def update(dt):
                     modo_juego = "victoria"
                 else:
                     # Detectar colisiones entre Broly y los ataques del personaje principal
-
-
-                    if broly_peleando_derecha[current_sprite5].colliderect(kameha_derecha[current_sprite]):
-                        print("Colision kamehameha derecha")
-                    elif  broly_peleando_izquierda[current_sprite5].colliderect(kameha_izquierda[current_sprite]):
-                        print("Colision kamehameha izquierda")
-                    elif broly_peleando_derecha[current_sprite5].colliderect(kameha_izquierda[current_sprite3]):
-                        print("Colision Goku Peleando")
-                    elif broly_peleando_derecha[current_sprite5].colliderect(sprite_right):
-                        print("Colision Goku estatico derecha")
-                    elif broly_peleando_derecha[current_sprite5].colliderect(sprite_left):
-                        print("Colision Goku estatico derecha")
-
-
                     if broly_peleando_izquierda[current_sprite5].colliderect(kameha_derecha[current_sprite]):
                         
                         if golpeando_sound_firsTime == True:
@@ -684,8 +679,11 @@ def elementos_secundarios():
 
     global genkidama_bola
 
-    #if genkidama == True and genkidama_bola[current_sprite2].x < 800:
-    #    genkidama_bola[current_sprite2].x += 5 
+    if genkidama_bola[current_sprite9].x < 800:
+        genkidama_bola[current_sprite9].x += 5 
+    else:
+        genkidama_bola[current_sprite9].x = sprite_x
+
 
     if elemento_volador_random == 1:
 
@@ -701,10 +699,6 @@ def elementos_secundarios():
                 nave.y = 150 + amplitud * math.sin(frecuencia * t2)
     
     explosion[current_sprite7].draw()
-
-    #genkidama_bola[current_sprite2].pos= (sprite_x ,sprite_y)
-    #genkidama_goku[current_sprite5-1].pos = (sprite_x,sprite_y)
-    genkidama_bola[current_sprite2].x += 5
 
 
 def dibujar_semillas():
@@ -759,7 +753,7 @@ def draw():
     
     global current_sprite6 , broly_peleando , kameha_derecha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
-    global sprite_left , sprite_right,sprite_y,moviendose,peleando
+    global sprite_left , sprite_right,sprite_y,moviendose,peleando,genkidama,salud_broly
 
     if modo_juego == "juego":
 
@@ -822,12 +816,12 @@ def draw():
                
                 #sprite_right.draw()
                 volando_derecha.draw()
-                print(saltando , "y: " ,kameha_derecha[0].y )
+            
                 #animate(kameha_derecha[0] , tween = "linear" , duration = 2 , y = 420)        
             else: 
                
                 volando_izquierda.draw()
-                print(saltando , "y: " ,kameha_izquierda[0].y )
+                
           
         elif peleando == True:
 
@@ -845,8 +839,21 @@ def draw():
         elif genkidama == True:
            
             genkidama_goku[current_sprite5-1].draw()
-            genkidama_bola[current_sprite2].draw()
-            
+            genkidama_bola[current_sprite9].draw()
+
+            print(current_sprite9)
+            if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 350:
+                genkidama = False
+
+            for i in range(len(genkidama_bola)):
+                index = genkidama_bola[current_sprite9].collidelist(broly_peleando_izquierda)
+                index2 = genkidama_bola[current_sprite9].collidelist(broly_peleando_derecha)
+
+                if index != -1 or index2 != -1:
+
+                    genkidama = False
+                    salud_broly += 200 
+
         else:      
 
             if moviendose == True:
