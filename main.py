@@ -502,13 +502,10 @@ def update(dt):
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
     global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,ataque_lanzado
 
-    print(sprite_x , sprite_y)
-
     if modo_juego == "juego":
         t += velocidad
         t2 += velocidad
            
-
         frame_count7 += 1
 
         if frame_count7 % 15 == 0:
@@ -599,12 +596,8 @@ def update(dt):
             if frame_count8 % animation_speed == 0:
                 current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado_izquierda)
 
-           
             current_sprite9 = (current_sprite9 + 1) % len(genkidama_bola)
            
-          
-            
-
             #BOLAS ENERGIA
             for i in range(len(bolas_energia)):
 
@@ -629,8 +622,6 @@ def update(dt):
                     bolas_energia.pop(i)
                     salud_broly += random.randint(1,3) 
                     break
-
-            
                         
             #LOGICA DE BROLLY
             if broly_peleando == True: 
@@ -857,8 +848,8 @@ def draw():
             sprite_x = sprite2_x + 10       
 
         elif genkidama == True:
-           
-            genkidama_goku[current_sprite5-1].draw()
+            genkidama_goku[current_sprite5].pos = (sprite_x,sprite_y)
+            genkidama_goku[current_sprite5].draw()
             genkidama_bola[current_sprite9].draw()
 
             if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 300:
@@ -871,7 +862,7 @@ def draw():
                 if index != -1 or index2 != -1:
 
                     genkidama = False
-                    salud_broly += 200 
+                    salud_broly += random.randint(3,5)
 
         else:      
 
