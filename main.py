@@ -7,7 +7,7 @@ import os
 # Configura el tamaño de la ventana
 WIDTH = 800
 HEIGHT = 600
-FPS = 30
+FPS = 15
 
 #Centrar la ventana al inicio.
 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -455,7 +455,7 @@ def controles():
         volando_derecha.x = sprite_x
         carga = 0
         
-    if keyboard.t and salud_broly<=150:
+    if keyboard.t and salud_goku<=150:
         genkidama = True
     
     # Ataque del personaje principal
@@ -693,7 +693,7 @@ def elementos_secundarios():
     if genkidama_bola[current_sprite9].x < 800:
         genkidama_bola[current_sprite9].x += 10
     else:
-        genkidama_bola[current_sprite9].x = sprite_x
+        genkidama_bola[current_sprite9].x = sprite_x - 105
 
 
     if elemento_volador_random == 1:
