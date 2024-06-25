@@ -40,7 +40,6 @@ amplitud = 6  # Amplitud de la curva (altura de la onda)
 frecuencia = 0.05  # Frecuencia de la curva (anchura de la onda)
 velocidad = 2  # Velocidad de movimiento a lo largo del eje x
 
-
 # Variables de energía
 player_energy = 100
 broly_energy = 100
@@ -49,10 +48,10 @@ energy_max = 100
 # Carga de Actores
 broly_menu = Actor("./elementos/elementos/broly_menu.png",(x_broly_menu,y_broly_menu))
 goku_menu =  Actor("./elementos/elementos/goku_menu.png",(x_goku_menu,y_goku_menu))
-avatar_broly = Actor("./elementos/elementos/avatar_broly.png",(760,40))
 fight = Actor("./elementos/elementos/fight.png",(center_x  , center_y + 140))
-vs = Actor("./elementos/elementos/vs.png",(center_x  , center_y - 35))
+avatar_broly = Actor("./elementos/elementos/avatar_broly.png",(760,40))
 logo =  Actor("./elementos/elementos/logo.png",(center_x  , center_y))
+vs = Actor("./elementos/elementos/vs.png",(center_x  , center_y - 35))
 avatar_goku =  Actor("./elementos/elementos/avatar_goku.png",(48,40))
 nube =  Actor("./elementos/elementos/nube.png", pos = (-1500,0)) 
 nave =  Actor("./elementos/elementos/nave.png",pos = (1400,0))
@@ -109,7 +108,6 @@ pelea4_left = Actor("./sprites/goku/atacando/izquierda/pelea3_left.png")
 pelea5_left = Actor("./sprites/goku/atacando/izquierda/pelea4_left.png")
 pelea6_left = Actor("./sprites/goku/atacando/izquierda/pelea5_left.png")
 
-
 sprite_left = Actor("./sprites/goku/otros/gokuleft.png")
 sprite_right = Actor("./sprites/goku/otros/gokuright.png")
 goku_derrotado = Actor("./sprites/goku/otros/goku_derrotado",pos = (sprite_x , sprite_y))
@@ -159,9 +157,6 @@ genkidama1 = Actor("./sprites/goku/genkidama/genkidama1_1.png", (sprite_x-105,sp
 genkidama2 = Actor("./sprites/goku/genkidama/genkidama1_2.png", (sprite_x-105,sprite_y - 90))
 genkidama3 = Actor("./sprites/goku/genkidama/genkidama1_3.png", (sprite_x-105,sprite_y - 90))
 
-
-
- 
 kameha_recargado1 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_1.png")
 kameha_recargado2 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_2.png")
 kameha_recargado3 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_3.png")
@@ -200,6 +195,7 @@ explosion3 = Actor("./sprites/explosion/explosion3.png",(center_x +2 , center_y 
 explosion4 = Actor("./sprites/explosion/explosion4.png",(center_x +2 , center_y - 35))
 explosion5 = Actor("./sprites/explosion/explosion5.png",(center_x +2 , center_y - 35))
 
+
 #Listas de cada animacion con  todos los actores en ellas.
 teles =  [tele1, tele2, tele3]
 cargando = [carga1, carga2, carga3]
@@ -218,18 +214,13 @@ kameha_recargado_derecha = [kameha_recargado1_derecha,kameha_recargado2_derecha,
 genkidama_goku = [genkidama_goku1,genkidama_goku2,genkidama_goku3,genkidama_goku4,genkidama_goku5,genkidama_goku6,genkidama_goku7,genkidama_goku8,genkidama_goku9,genkidama_goku10,genkidama_goku11,genkidama_goku12,genkidama_goku13]
 genkidama_bola = [genkidama1,genkidama2,genkidama3]
 
-semillas  = [] 
 bolas_energia = []
-
-x = random.randint(0,WIDTH)
-y = random.randint(0,1800)
-semilla = Actor("./elementos/elementos/semilla.png" , (x,-y))
-semillas.append(semilla)
+semillas  = [] 
 
 fight.pos = (WIDTH // 2, HEIGHT // 2)
 
 # Variables de la animación
-current_sprite  = 0   # ataque
+current_sprite  = 0  # ataque
 current_sprite2 = 0  # carga
 current_sprite3 = 0  # pelea
 current_sprite4 = 0  # teletransportación
@@ -238,7 +229,6 @@ current_sprite6 = 0  # broly desconvertido
 current_sprite7 = 0 # explosion del vs
 current_sprite8 = 0 # kamehameha recargado
 current_sprite9 = 0 # genkidama
-
 
 animation_speed = 8  # Velocidad de la animación, ajustar según necesidad
 animation_speedBroly = 8  # Velocidad de la animación, ajustar según necesidad
@@ -255,48 +245,47 @@ frame_count8 = 0
 frame_count9 = 0
 
 # Variables de estado necesarias para controlar varios aspectos del juego
-attack = False
-attack_recargado = False
-moviendose = False
-carga = 0
-saltando = False
-peleando = False
-teletransportacion = False
-broly_peleando = True
-desconvertido = False
 elemento_volador_random = random.randint(1,2)
-tiempo = 0
+sonido_fight_reproducido = False
+golpeando_sound_firsTime = True
 genkidama_x = sprite_x
 genkidama_y = sprite_y
-genkidama = False
-sonido_fight_reproducido = False
-modo_juego = "menu"
-
-sprite_reproducido = False
-firstTime = True
-firstTimeScream = True
-firstTimeEndBattle = True
 kame_sound_firstTime = True
+firstTimeEndBattle = True
+teletransportacion = False
+sprite_reproducido = False
 switch_efecto_menu = True
-golpeando_sound_firsTime = True
-
+fondo_seleccionado = False
+attack_recargado = False
+firstTimeScream = True
+ataque_lanzado = False
+broly_peleando = True
+desconvertido = False
 trayectoNave = False
 trayectoNube = True
+moviendose = False
+modo_juego = "menu"
+genkidama = False
+firstTime = True
+peleando = False
+saltando = False
+attack = False
 
-fondo_seleccionado = False
+
+direccion_goku = "derecha" # Direccion de personaje principal.
 indice_fondos = 0
-
-timer = 0
-
-# Direccion de personaje princial, Papucho Goku! :)
-direccion_goku = "derecha"
-
-# Variables de salud
 salud_broly = 80
 salud_goku = 40
+tiempo = 0
+carga = 0
+timer = 0
 
-ataque_lanzado = False
 
+def generar_semillas():
+    x = random.randint(0,WIDTH)
+    y = random.randint(0,1800)
+    semilla = Actor("./elementos/elementos/semilla.png" , (x,-y))
+    semillas.append(semilla)
 
 def sonidos():
     # Cargar y reproduccion de sonidos
@@ -455,7 +444,7 @@ def controles():
         volando_derecha.x = sprite_x
         carga = 0
         
-    if keyboard.t and salud_goku<=150:
+    if keyboard.t and salud_goku<=100:
         genkidama = True
     
     # Ataque del personaje principal
@@ -711,7 +700,6 @@ def elementos_secundarios():
     
     explosion[current_sprite7].draw()
 
-
 def dibujar_semillas():
     for i in range(len(semillas)):
         semillas[i].draw()
@@ -721,7 +709,7 @@ def mover_semillas():
     #Moviendo las semillas del ermitaño con sistema de probalididad + aleatoriedad.
 
     probabilidad_semilla = random.randint(1,20)
-    if probabilidad_semilla == 15 and  salud_goku <= 50:
+    if probabilidad_semilla == 15 and  salud_goku <= 150:
 
         #Dibujado de las semillas del ermitaño
             #Moviendo las semillas hacia abajo
@@ -730,7 +718,7 @@ def mover_semillas():
 
         if contacto != -1:
             semillas.pop(contacto)
-            salud_goku = 100
+            salud_goku = 300
 
 
         for i in range(len(semillas)):
@@ -750,7 +738,7 @@ def on_mouse_down(pos):
     elif modo_juego == "derrota" and perdiste.collidepoint(pos):
         modo_juego = "menu"
         salud_broly = 0
-        salud_goku = 100
+        salud_goku = 300
 
 def barras():
     # Dibujar las barras de salud
@@ -764,8 +752,7 @@ def draw():
     
     global current_sprite6 , broly_peleando , kameha_derecha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
-    global sprite_left , sprite_right,sprite_y,moviendose,peleando,genkidama,salud_broly
-
+    global sprite_left , sprite_right,sprite_y,moviendose,peleando,genkidama,salud_broly,genkidama_x
     if modo_juego == "juego":
 
         #Dibujando fondo1
@@ -852,16 +839,17 @@ def draw():
             genkidama_goku[current_sprite5].draw()
             genkidama_bola[current_sprite9].draw()
 
-            if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 300:
+            if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 70:
                 genkidama = False
 
             for i in range(len(genkidama_bola)):
                 index = genkidama_bola[current_sprite9].collidelist(broly_peleando_izquierda)
                 index2 = genkidama_bola[current_sprite9].collidelist(broly_peleando_derecha)
-
+                
                 if index != -1 or index2 != -1:
 
                     genkidama = False
+                    genkidama_x = sprite_x
                     salud_broly += random.randint(3,5)
 
         else:      
@@ -933,7 +921,7 @@ def draw():
             if modo_juego == "victoria" and not sprite_reproducido:
     
                 broly_desconvertido[current_sprite6].draw()
-                sprite_reproducido = True
+                modo_juego = "derrota"
             else:
                 broly_desconvertido[current_sprite6].draw()
 
