@@ -141,15 +141,24 @@ kameha_recargado14_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameh
 kameha_recargado15_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_12.png")
 kameha_recargado16_derecha = Actor("./sprites/goku/kamehameha2/derecha/kamehameha2_13.png")
  
-genkidama_goku1 = Actor("./sprites/goku/genkidama/genkidama1.png",(sprite_x,sprite_y))
-genkidama_goku2 = Actor("./sprites/goku/genkidama/genkidama2.png",(sprite_x,sprite_y))
-genkidama_goku3 = Actor("./sprites/goku/genkidama/genkidama3.png",(sprite_x,sprite_y))
-genkidama_goku4 = Actor("./sprites/goku/genkidama/genkidama4.png",(sprite_x,sprite_y))
-genkidama_goku5 = Actor("./sprites/goku/genkidama/genkidama5.png",(sprite_x,sprite_y))
+genkidama_goku1 = Actor("./sprites/goku/genkidama/01.png",(sprite_x,sprite_y-20))
+genkidama_goku2 = Actor("./sprites/goku/genkidama/02.png",(sprite_x,sprite_y-20))
+genkidama_goku3 = Actor("./sprites/goku/genkidama/03.png",(sprite_x,sprite_y-20))
+genkidama_goku4 = Actor("./sprites/goku/genkidama/04.png",(sprite_x,sprite_y-20))
+genkidama_goku5 = Actor("./sprites/goku/genkidama/05.png",(sprite_x,sprite_y-20))
+genkidama_goku6 = Actor("./sprites/goku/genkidama/06.png",(sprite_x,sprite_y-20))
+genkidama_goku7 = Actor("./sprites/goku/genkidama/07.png",(sprite_x,sprite_y-20))
+genkidama_goku8 = Actor("./sprites/goku/genkidama/08.png",(sprite_x,sprite_y-20))
+genkidama_goku9 = Actor("./sprites/goku/genkidama/09.png",(sprite_x,sprite_y-20))
+genkidama_goku10 = Actor("./sprites/goku/genkidama/010.png",(sprite_x,sprite_y-20))
+genkidama_goku11 = Actor("./sprites/goku/genkidama/011.png",(sprite_x,sprite_y-20))
+genkidama_goku12 = Actor("./sprites/goku/genkidama/012.png",(sprite_x,sprite_y-20))
+genkidama_goku13 = Actor("./sprites/goku/genkidama/013.png",(sprite_x,sprite_y-20))
 
-genkidama1 = Actor("./sprites/goku/genkidama/genkidama1_1.png", (sprite_x-105,sprite_y - 70))
-genkidama2 = Actor("./sprites/goku/genkidama/genkidama1_2.png", (sprite_x-105,sprite_y - 70))
-genkidama3 = Actor("./sprites/goku/genkidama/genkidama1_3.png", (sprite_x-105,sprite_y - 70))
+genkidama1 = Actor("./sprites/goku/genkidama/genkidama1_1.png", (sprite_x-105,sprite_y - 90))
+genkidama2 = Actor("./sprites/goku/genkidama/genkidama1_2.png", (sprite_x-105,sprite_y - 90))
+genkidama3 = Actor("./sprites/goku/genkidama/genkidama1_3.png", (sprite_x-105,sprite_y - 90))
+
 
 
  
@@ -206,7 +215,7 @@ fondos = [fondo,fondo2,fondo3,fondo4]
 kameha_recargado_izquierda = [kameha_recargado1,kameha_recargado2,kameha_recargado3,kameha_recargado4,kameha_recargado5,kameha_recargado6,kameha_recargado7,kameha_recargado8,kameha_recargado9,kameha_recargado10,kameha_recargado11,kameha_recargado12,kameha_recargado13,kameha_recargado14,kameha_recargado15,kameha_recargado16]
 kameha_recargado_derecha = [kameha_recargado1_derecha,kameha_recargado2_derecha,kameha_recargado3_derecha,kameha_recargado4_derecha,kameha_recargado5_derecha,kameha_recargado6_derecha,kameha_recargado7_derecha,kameha_recargado8_derecha,kameha_recargado9_derecha,kameha_recargado10_derecha,kameha_recargado11_derecha,kameha_recargado12_derecha,kameha_recargado13_derecha,kameha_recargado14_derecha,kameha_recargado15_derecha,kameha_recargado16_derecha]
 
-genkidama_goku = [genkidama_goku1,genkidama_goku2,genkidama_goku3,genkidama_goku4,genkidama_goku5]
+genkidama_goku = [genkidama_goku1,genkidama_goku2,genkidama_goku3,genkidama_goku4,genkidama_goku5,genkidama_goku6,genkidama_goku7,genkidama_goku8,genkidama_goku9,genkidama_goku10,genkidama_goku11,genkidama_goku12,genkidama_goku13]
 genkidama_bola = [genkidama1,genkidama2,genkidama3]
 
 semillas  = [] 
@@ -232,7 +241,7 @@ current_sprite9 = 0 # genkidama
 
 
 animation_speed = 8  # Velocidad de la animación, ajustar según necesidad
-animation_speedBroly = 16  # Velocidad de la animación, ajustar según necesidad
+animation_speedBroly = 8  # Velocidad de la animación, ajustar según necesidad
 
 #Estos frames representan el cuadro de la cada animacion, corresponden con los 'current_spritex' (Estan unas lineas arriba).
 frame_count  = 0
@@ -502,7 +511,7 @@ def update(dt):
 
         frame_count7 += 1
 
-        if frame_count7 % animation_speedBroly == 0:
+        if frame_count7 % 15 == 0:
             current_sprite7 = (current_sprite7 + 1) % len(explosion)  
 
         if salud_goku >0 :
@@ -590,26 +599,37 @@ def update(dt):
             if frame_count8 % animation_speed == 0:
                 current_sprite8 = (current_sprite8 + 1) % len(kameha_recargado_izquierda)
 
-            if frame_count9 % animation_speed == 0:
-                current_sprite9 = (current_sprite9 + 1) % len(genkidama_bola)
+           
+            current_sprite9 = (current_sprite9 + 1) % len(genkidama_bola)
            
           
             
 
             #BOLAS ENERGIA
             for i in range(len(bolas_energia)):
-                if direccion_goku == "derecha" and ataque_lanzado == False:
+
+                if sprite2_x > sprite_x and ataque_lanzado == False:
                     bolas_energia[i].x +=4
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia.png"
-
+                    ataque_lanzado = False
                     
-                elif direccion_goku == "izquierda":
+                elif sprite2_x < sprite_x and ataque_lanzado == False:
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia_izquierda.png"
                     bolas_energia[i].x -=4
+                    ataque_lanzado = False
 
                 if bolas_energia[i].x > WIDTH or bolas_energia[i].x < 0:
                     bolas_energia.pop(i)
                     ataque_lanzado = False
+                    break
+                    
+                colision = broly.collidelist(bolas_energia) 
+
+                if colision != -1:
+                    bolas_energia.pop(i)
+                    salud_broly += random.randint(1,3) 
+                    break
+
             
                         
             #LOGICA DE BROLLY
@@ -680,7 +700,7 @@ def elementos_secundarios():
     global genkidama_bola
 
     if genkidama_bola[current_sprite9].x < 800:
-        genkidama_bola[current_sprite9].x += 5 
+        genkidama_bola[current_sprite9].x += 10
     else:
         genkidama_bola[current_sprite9].x = sprite_x
 
@@ -841,8 +861,7 @@ def draw():
             genkidama_goku[current_sprite5-1].draw()
             genkidama_bola[current_sprite9].draw()
 
-            print(current_sprite9)
-            if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 350:
+            if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 300:
                 genkidama = False
 
             for i in range(len(genkidama_bola)):
@@ -865,7 +884,6 @@ def draw():
                     caminando_derecha.x = sprite_x
                     caminando_derecha.y = sprite_y
                     caminando_derecha.draw()
-    
 
             if salud_goku <= 0:  
 
