@@ -13,6 +13,7 @@ FPS = 15
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 #Variables que serviran para representar y controlar la posicion de cada jugados
+
 #Goku
 sprite_x = 200
 sprite_y = 470
@@ -153,9 +154,9 @@ genkidama_goku11 = Actor("./sprites/goku/genkidama/011.png",(sprite_x,sprite_y-2
 genkidama_goku12 = Actor("./sprites/goku/genkidama/012.png",(sprite_x,sprite_y-20))
 genkidama_goku13 = Actor("./sprites/goku/genkidama/013.png",(sprite_x,sprite_y-20))
 
-genkidama1 = Actor("./sprites/goku/genkidama/genkidama1_1.png", (sprite_x-105,sprite_y - 90))
-genkidama2 = Actor("./sprites/goku/genkidama/genkidama1_2.png", (sprite_x-105,sprite_y - 90))
-genkidama3 = Actor("./sprites/goku/genkidama/genkidama1_3.png", (sprite_x-105,sprite_y - 90))
+genkidama1 = Actor("./sprites/goku/genkidama/genkidama1_1.png", (sprite_x,sprite_y - 90))
+genkidama2 = Actor("./sprites/goku/genkidama/genkidama1_2.png", (sprite_x,sprite_y - 90))
+genkidama3 = Actor("./sprites/goku/genkidama/genkidama1_3.png", (sprite_x,sprite_y - 90))
 
 kameha_recargado1 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_1.png")
 kameha_recargado2 =  Actor("./sprites/goku/kamehameha2/izquierda/kamehameha2_2.png")
@@ -275,7 +276,7 @@ attack = False
 direccion_goku = "derecha" # Direccion de personaje principal.
 indice_fondos = 0
 salud_broly = 80
-salud_goku = 40
+salud_goku = 80
 tiempo = 0
 carga = 0
 timer = 0
@@ -410,18 +411,13 @@ def controles():
         moviendose = True
     else:
         moviendose = False
-
-        
         
     if keyboard.o:
         attack_recargado = True
     else:
         attack_recargado = False
         
-    if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2:
-        
-        bola_energia = Actor("./sprites/goku/otros/bola_energia.png",(sprite_x,sprite_y))        
-        bolas_energia.append(bola_energia)
+
         
 
     # Salto del personaje principal
@@ -446,6 +442,7 @@ def controles():
         
     if keyboard.t and salud_goku<=100:
         genkidama = True
+        player_energy -= 100;
     
     # Ataque del personaje principal
     if keyboard.j and player_energy > 0:
@@ -485,7 +482,7 @@ def controles():
     else:
         teletransportacion = 0
 
-def update(dt):
+def update():
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7,current_sprite8,current_sprite9
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,frame_count8,frame_count9,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
@@ -674,6 +671,14 @@ def elemento_volador_aleatorio():
 
     #elemento_volador_random = 1
     elemento_volador_random = random.randint(1,100)
+
+def on_key_down():
+    global player_energy
+    if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2 and player_energy >= 15:
+    
+        bola_energia = Actor("./sprites/goku/otros/bola_energia.png",(sprite_x,sprite_y))        
+        bolas_energia.append(bola_energia)
+        player_energy -= 15
 
 def elementos_secundarios():
 
