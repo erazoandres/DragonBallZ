@@ -1,5 +1,5 @@
 import pgzrun
-from pgzero.clock import clock
+import pgzero.clock
 import random
 import math
 import os 
@@ -45,6 +45,10 @@ velocidad = 2  # Velocidad de movimiento a lo largo del eje x
 player_energy = 100
 broly_energy = 100
 energy_max = 100
+
+#Dialogos Posiciones
+pos_txt1 = -280
+pos_txt2 = 820
 
 # Carga de Actores
 broly_menu = Actor("./elementos/elementos/broly_menu.png",(x_broly_menu,y_broly_menu))
@@ -196,6 +200,12 @@ explosion3 = Actor("./sprites/explosion/explosion3.png",(center_x +2 , center_y 
 explosion4 = Actor("./sprites/explosion/explosion4.png",(center_x +2 , center_y - 35))
 explosion5 = Actor("./sprites/explosion/explosion5.png",(center_x +2 , center_y - 35))
 
+fondo_dialogo = Actor("../images/elementos/fondos/fondo2")
+goku_dialogo = Actor("../images/dialogos/goku" , (-200,450))
+broly_dialogo = Actor("../images/dialogos/broly", (1000,450))
+dialogo = Actor("../images/elementos/elementos/recuadro_dialogo", (1000,550))
+dialogo2 = Actor("../images/elementos/elementos/recuadro_dialogo2", (-200,550))
+
 
 #Listas de cada animacion con  todos los actores en ellas.
 teles =  [tele1, tele2, tele3]
@@ -260,7 +270,9 @@ fondo_seleccionado = False
 attack_recargado = False
 firstTimeScream = True
 ataque_lanzado = False
-broly_peleando = True
+# broly_peleando = True
+broly_peleando = False
+
 desconvertido = False
 trayectoNave = False
 trayectoNube = True
@@ -275,12 +287,39 @@ attack = False
 
 direccion_goku = "derecha" # Direccion de personaje principal.
 indice_fondos = 0
-salud_broly = 80
+salud_broly = 0
 salud_goku = 80
 tiempo = 0
 carga = 0
 timer = 0
 
+
+def iniciar_dialogo(actor1, actor2):
+
+    global pos_txt1, pos_txt2
+
+    if actor1.x < 100:
+        actor1.x += 2
+        dialogo2.x += 2
+
+
+    if actor2.x > 700:
+        actor2.x -= 2
+        dialogo.x -= 2
+
+
+    if actor1.x < 100:
+        pos_txt2 -= 2
+
+    if actor2.x > 700:
+        pos_txt1 += 2
+
+
+    if not (actor1.x < 100):
+        pgzero.clock.schedule(pasar,1)
+   
+def pasar():
+    modo_juego = "juego"
 
 def generar_semillas():
     x = random.randint(0,WIDTH)
@@ -398,7 +437,7 @@ def logica_ataque_persecucion():
 def controles():
 
     global sprite_x, sprite_y, player_energy,carga,direccion_goku,attack,current_sprite,peleando,teletransportacion, kame_sound_firstTime,attack_recargado
-    global current_sprite8,bolas_energia,saltando,moviendose,genkidama
+    global current_sprite8,bolas_energia,saltando,moviendose,genkidama,modo_juego
     # Movimiento del personaje principal
     
     if keyboard.d and sprite_x<WIDTH - 16:
@@ -412,13 +451,8 @@ def controles():
     else:
         moviendose = False
         
-    if keyboard.o:
-        attack_recargado = True
-    else:
-        attack_recargado = False
-        
 
-        
+            
 
     # Salto del personaje principal
     if keyboard.space:
@@ -440,22 +474,8 @@ def controles():
         volando_derecha.x = sprite_x
         carga = 0
         
-    if keyboard.t and salud_goku<=100:
-        genkidama = True
-        player_energy -= 100;
-    
-    # Ataque del personaje principal
-    if keyboard.j and player_energy > 0:
-        if kame_sound_firstTime == True:
-           
-            kame_sound.play()  # Reproduce el sonido de teletransportación
-            kame_sound_firstTime = False
-        attack = 1
-        
-        player_energy -= random.random()  
-    else:
-        current_sprite = 0
-        attack = 0
+
+   
         
     # Carga del personaje principal
     if keyboard.i:
@@ -472,16 +492,6 @@ def controles():
     else:
         peleando = 0
         
-    # Teletransportación del personaje principal
-    if keyboard.u:
-
-        golpeando_sound.stop()
-        tele_sound.play()  # Reproduce el sonido de teletransportación
-        teletransportacion = 1      
-    
-    else:
-        teletransportacion = 0
-
 def update():
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7,current_sprite8,current_sprite9
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,frame_count8,frame_count9,firstTimeEndBattle,switch_efecto_menu
@@ -666,6 +676,12 @@ def update():
         sonido_grito_goku.play()
         firstTimeScream = False
 
+    elif modo_juego == "dialogos":
+        iniciar_dialogo(goku_dialogo,broly_dialogo) 
+        
+        if keyboard.space and modo_juego == "dialogos" and not (goku_dialogo.x < 100):
+            modo_juego = "juego"
+
 def elemento_volador_aleatorio():
     global elemento_volador_random
 
@@ -673,12 +689,49 @@ def elemento_volador_aleatorio():
     elemento_volador_random = random.randint(1,100)
 
 def on_key_down():
-    global player_energy
+    global player_energy , teletransportacion , attack_recargado, current_sprite,attack, kame_sound_firstTime, genkidama
+    
+
+    if keyboard.t and salud_goku<=100:
+        genkidama = True
+        player_energy -= 100
+        
+    
     if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2 and player_energy >= 15:
     
         bola_energia = Actor("./sprites/goku/otros/bola_energia.png",(sprite_x,sprite_y))        
         bolas_energia.append(bola_energia)
         player_energy -= 15
+
+        # Teletransportación del personaje principal
+   
+    if keyboard.u and player_energy >= 10 and modo_juego == "juego":
+
+        golpeando_sound.stop()
+        tele_sound.play()  # Reproduce el sonido de teletransportación
+        teletransportacion = 1   
+        player_energy -= 10
+    
+    else:
+        teletransportacion = 0
+
+    # Ataque del personaje principal
+    if keyboard.j and player_energy > 20:
+        if kame_sound_firstTime == True:
+           
+            kame_sound.play()  # Reproduce el sonido de teletransportación
+            kame_sound_firstTime = False
+        attack = 1        
+        player_energy -= 20  
+    else:
+        current_sprite = 0
+        attack = 0
+
+    if keyboard.o and player_energy >= 30:
+        attack_recargado = True
+        player_energy -= 30
+    else:
+        attack_recargado = False
 
 def elementos_secundarios():
 
@@ -739,7 +792,8 @@ def mover_semillas():
 def on_mouse_down(pos):
     global modo_juego,salud_broly,salud_goku
     if goku_menu.collidepoint(pos):
-        modo_juego = "juego"
+        modo_juego = "dialogos"
+        
     elif modo_juego == "derrota" and perdiste.collidepoint(pos):
         modo_juego = "menu"
         salud_broly = 0
@@ -949,8 +1003,22 @@ def draw():
     elif modo_juego == "derrota":
         perdiste.draw()
     elif modo_juego == "dialogos":
-        kamehouse.draw()
-     
+        fondo_dialogo.draw()
+        goku_dialogo.draw()
+        broly_dialogo.draw()
+        dialogo.draw()
+        dialogo2.draw()
+
+
+        if not( goku_dialogo.x < 100):
+            screen.draw.text("¡No subestimes mi poder, Broly!", pos=(pos_txt1, 540), fontsize=20, color="white")
+            screen.draw.text("¡Estoy listo para luchar!", pos=(pos_txt1, 560), fontsize=20, color="white")
+
+
+        if not (broly_dialogo.x > 700):
+            screen.draw.text("Kkkkkk Kkkk Kkk", pos=(pos_txt2, 540), fontsize=20, color="white")
+            screen.draw.text("¡Kaaaa Kaaakaaarotooooo!", pos=(pos_txt2, 560), fontsize=20, color="white")
+   
 def espera():
 
     x = 0
