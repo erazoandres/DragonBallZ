@@ -462,9 +462,9 @@ def controles():
         #salto_sound.play()
         saltando = True
         sprite_y = 315
-        volando_izquierda.y = 308
+        volando_izquierda.y -= 5
         volando_izquierda.x = sprite_x
-        volando_derecha.y = 308
+        volando_derecha.y -= 5
         volando_derecha.x = sprite_x
         carga = 1
        
@@ -802,9 +802,9 @@ def mover_semillas():
 def on_mouse_down(pos):
     global modo_juego,salud_broly,salud_goku
     global pos_txt1 , pos_txt2 , dialogo_goku , dialogo_broly
-    global sprite_x , sprite_y , sprite2_x , sprite2_y, carga
-
-
+    global sprite_x , sprite_y , sprite2_x , sprite2_y, carga, sonido_fight_reproducido
+    global fondo_seleccionado , elemento_volador_random , switch_efecto_menu
+    
 
     if goku_menu.collidepoint(pos):
         modo_juego = "dialogos"
@@ -817,7 +817,13 @@ def on_mouse_down(pos):
         dialogo2.pos = (-200,550)
         #Dialogos Posiciones
         pos_txt1 = -280
+        sonido_fight_reproducido = False
         pos_txt2 = 820
+        elemento_volador_random = random.randint(1,2)
+        nube.pos = (-1500,0)
+        nave.pos = (1400,0)
+        fondo_seleccionado = False
+        switch_efecto_menu = True
 
         dialogo_goku = False
         dialogo_broly = False
