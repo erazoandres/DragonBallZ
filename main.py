@@ -271,8 +271,6 @@ attack_recargado = False
 firstTimeScream = True
 ataque_lanzado = False
 broly_peleando = True
-# broly_peleando = False
-
 desconvertido = False
 trayectoNave = False
 trayectoNube = True
@@ -292,7 +290,7 @@ dialogo_broly = False
 direccion_goku = "derecha" # Direccion de personaje principal.
 indice_fondos = 0
 salud_broly = 0
-salud_goku = 1
+salud_goku = 50
 tiempo = 0
 carga = 0
 timer = 0
@@ -515,16 +513,10 @@ def update():
         if frame_count7 % 15 == 0:
             current_sprite7 = (current_sprite7 + 1) % len(explosion)  
 
-        if salud_goku >0 :
+        if salud_goku > 0 :
             controles()
             mover_semillas()
 
-            #Reproducir dialogo entre Krilin y Goku cuando este nececita semillas.
-            for i in range(len(semillas)):
-                if semillas[i].y >= 0 and firstTime == True and salud_goku>=0:
-                    sonido_pide.play() 
-                    firstTime = False
-        
             # Actualiza la posición de los kameha_derecha de ataque
             for sprite in kameha_derecha:
                 sprite.pos = (sprite_x, sprite_y)
@@ -785,17 +777,15 @@ def mover_semillas():
     #Moviendo las semillas del ermitaño con sistema de probalididad + aleatoriedad.
 
     probabilidad_semilla = random.randint(1,20)
+    
     if probabilidad_semilla == 15 and  salud_goku <= 20:
-
-        #Dibujado de las semillas del ermitaño
-            #Moviendo las semillas hacia abajo
+    
 
         contacto = kameha_derecha[current_sprite].collidelist(semillas)
 
         if contacto != -1:
             semillas.pop(contacto)
-            salud_goku = 300
-
+            salud_goku = 100
 
         for i in range(len(semillas)):
             if semillas[i].y < HEIGHT + 20:
@@ -1069,5 +1059,6 @@ def espera():
 if modo_juego == "juego":
     clock.schedule_interval_(saludar, 10.0)
 
+generar_semillas()
 sonidos()
 pgzrun.go()
