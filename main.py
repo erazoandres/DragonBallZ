@@ -363,7 +363,7 @@ def sonidos():
     sonido_curar.set_volume(0.3)
 
     sonido_pide = sounds.sonidopidesemilla # Asegúrate de que el archivo pide.wav está en la carpeta sounds
-    sonido_pide.set_volume(0.6)
+    sonido_pide.set_volume(1)
 
     sonido_final_goku = sounds.sonidofinalgoku # Asegúrate de que el archivo final.wav está en la carpeta sounds
     sonido_final_goku.set_volume(0.6)
@@ -380,7 +380,7 @@ def sonidos():
     sonido_dialogo_broly = sounds.dialogo_broly
     sonido_dialogo_broly.set_volume(1.5)
 
-    music.play("musicmenu.mp3")
+    # music.play("musicmenu.mp3")
 
 def terminar_juego():
     global modo_juego
@@ -777,8 +777,9 @@ def mover_semillas():
     #Moviendo las semillas del ermitaño con sistema de probalididad + aleatoriedad.
 
     probabilidad_semilla = random.randint(1,20)
+
     
-    if probabilidad_semilla == 15 and  salud_goku <= 20:
+    if probabilidad_semilla == 15 and  salud_goku <= 30:
     
 
         contacto = kameha_derecha[current_sprite].collidelist(semillas)
@@ -796,6 +797,7 @@ def mover_semillas():
             if semillas[i].y >= 0 and firstTime == True and salud_goku>=0:
                 sonido_pide.play() 
                 firstTime = False
+
 
 def on_mouse_down(pos):
     global modo_juego,salud_broly,salud_goku
