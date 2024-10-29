@@ -270,8 +270,8 @@ fondo_seleccionado = False
 attack_recargado = False
 firstTimeScream = True
 ataque_lanzado = False
-# broly_peleando = True
-broly_peleando = False
+broly_peleando = True
+# broly_peleando = False
 
 desconvertido = False
 trayectoNave = False
@@ -284,11 +284,15 @@ peleando = False
 saltando = False
 attack = False
 
+dialogo_goku = False
+dialogo_broly = False
+
+
 
 direccion_goku = "derecha" # Direccion de personaje principal.
 indice_fondos = 0
 salud_broly = 0
-salud_goku = 80
+salud_goku = 1
 tiempo = 0
 carga = 0
 timer = 0
@@ -330,8 +334,8 @@ def generar_semillas():
 def sonidos():
     # Cargar y reproduccion de sonidos
 
-    global tele_sound,golpeando_sound,kame_sound,salto_sound,sonido_carga,sonido_muere
-    global sonido_curar,sonido_pide,sonido_final_goku,sonido_grito_goku,sonido_efecto,fight_sound
+    global tele_sound,golpeando_sound,kame_sound,salto_sound,sonido_carga,sonido_muere, sonido_dialogo_goku
+    global sonido_curar,sonido_pide,sonido_final_goku,sonido_grito_goku,sonido_efecto,fight_sound,sonido_dialogo_broly
 
     #Efectos de sonido del juego en .wav
     fight_sound = sounds.audio_fight  # Asegúrate de que el archivo teletransportacion.wav está en la carpeta sounds
@@ -372,12 +376,13 @@ def sonidos():
     sonido_efecto = sounds.efectomenu # Asegúrate de que el archivo curar.wav está en la carpeta sounds
     sonido_efecto.set_volume(1.5)
 
+    sonido_dialogo_goku = sounds.dialogo_goku
+    sonido_dialogo_goku.set_volume(1.5)
 
-    if modo_juego == "menu":
-        music.play("musicmenu.mp3")
-        music.set_volume(0.5)
-    elif modo_juego == "juego":
-        music.play("sound.mp3")
+    sonido_dialogo_broly = sounds.dialogo_broly
+    sonido_dialogo_broly.set_volume(1.5)
+
+    music.play("musicmenu.mp3")
 
 def terminar_juego():
     global modo_juego
@@ -496,7 +501,8 @@ def update():
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7,current_sprite8,current_sprite9
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,frame_count8,frame_count9,firstTimeEndBattle,switch_efecto_menu
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
-    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,ataque_lanzado
+    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,ataque_lanzado, dialogo_goku,dialogo_broly, pos_txt2
+    global goku_dialogo , broly_dialogo , pos_txt1
 
     if modo_juego == "juego":
         t += velocidad
@@ -674,10 +680,30 @@ def update():
     elif modo_juego == "derrota" and firstTimeScream == True:
         golpeando_sound.stop() # IMPORTANTE ! HAY QUE DETENER UN .WAV PARA QUE DEJE SONAR OTRO, ME COSTO BASTANTE DESCUBRIELO XD
         sonido_grito_goku.play()
+       
+       #restableciendo valores
         firstTimeScream = False
+        goku_dialogo.pos = (-200,450)
+        broly_dialogo.pos = (1000,450)
+        dialogo.pos = (1000,550)
+        dialogo2.pos = (-200,550)
+        #Dialogos Posiciones
+        pos_txt1 = -280
+        pos_txt2 = 820
+
+        dialogo_goku = False
+        dialogo_broly = False
 
     elif modo_juego == "dialogos":
         iniciar_dialogo(goku_dialogo,broly_dialogo) 
+
+        if not dialogo_goku:
+            sonido_dialogo_goku.play()
+            dialogo_goku = True
+
+        if not dialogo_broly:
+            sonido_dialogo_broly.play()
+            dialogo_broly = True
         
         if keyboard.space and modo_juego == "dialogos" and not (goku_dialogo.x < 100):
             modo_juego = "juego"
@@ -686,18 +712,28 @@ def elemento_volador_aleatorio():
     global elemento_volador_random
 
     #elemento_volador_random = 1
-    elemento_volador_random = random.randint(1,100)
+    elemento_volador_random = random.randint(1,2)
 
 def on_key_down():
     global player_energy , teletransportacion , attack_recargado, current_sprite,attack, kame_sound_firstTime, genkidama
     
+        # Ataque del personaje principal
+    if keyboard.j and player_energy > 20:
+        if kame_sound_firstTime == True:
+           
+            kame_sound.play()  # Reproduce el sonido de teletransportación
+            kame_sound_firstTime = False
+        attack = 1        
+        player_energy -= 20  
+    else:
+        current_sprite = 0
+        attack = 0
 
     if keyboard.t and salud_goku<=100:
         genkidama = True
         player_energy -= 100
         
-    
-    if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2 and player_energy >= 15:
+    if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2 :
     
         bola_energia = Actor("./sprites/goku/otros/bola_energia.png",(sprite_x,sprite_y))        
         bolas_energia.append(bola_energia)
@@ -715,17 +751,7 @@ def on_key_down():
     else:
         teletransportacion = 0
 
-    # Ataque del personaje principal
-    if keyboard.j and player_energy > 20:
-        if kame_sound_firstTime == True:
-           
-            kame_sound.play()  # Reproduce el sonido de teletransportación
-            kame_sound_firstTime = False
-        attack = 1        
-        player_energy -= 20  
-    else:
-        current_sprite = 0
-        attack = 0
+
 
     if keyboard.o and player_energy >= 30:
         attack_recargado = True
@@ -1027,7 +1053,7 @@ def espera():
             x += random.random()
 
 if modo_juego == "juego":
-    clock.schedule_interval(saludar, 2.0)
+    clock.schedule_interval_(saludar, 10.0)
 
 sonidos()
 pgzrun.go()
