@@ -503,6 +503,9 @@ def update():
     global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
     global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,ataque_lanzado, dialogo_goku,dialogo_broly, pos_txt2
     global goku_dialogo , broly_dialogo , pos_txt1
+    global sprite_x , sprite_y , sprite2_x , sprite2_y
+    global salud_goku,salud_broly,carga
+    
 
     if modo_juego == "juego":
         t += velocidad
@@ -694,6 +697,13 @@ def update():
         dialogo_goku = False
         dialogo_broly = False
 
+        sprite_x = 200
+        sprite_y = 470
+        sprite2_x = 600
+        sprite2_y = 450
+        salud_goku = 30
+        salud_broly = 0
+        carga = 0
     elif modo_juego == "dialogos":
         iniciar_dialogo(goku_dialogo,broly_dialogo) 
 
@@ -822,8 +832,6 @@ def on_mouse_down(pos):
         
     elif modo_juego == "derrota" and perdiste.collidepoint(pos):
         modo_juego = "menu"
-        salud_broly = 0
-        salud_goku = 300
 
 def barras():
     # Dibujar las barras de salud
