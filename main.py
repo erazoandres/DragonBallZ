@@ -500,11 +500,10 @@ def controles():
 def update():
     global current_sprite, current_sprite2, current_sprite3, current_sprite4, current_sprite5,current_sprite6,current_sprite7,current_sprite8,current_sprite9
     global frame_count, frame_count2, frame_count3, frame_count4, frame_count5,frame_count6,frame_count7,frame_count8,frame_count9,firstTimeEndBattle,switch_efecto_menu
-    global attack, carga, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
-    global sprite2_x, salud_broly, salud_goku,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,ataque_lanzado, dialogo_goku,dialogo_broly, pos_txt2
-    global goku_dialogo , broly_dialogo , pos_txt1
-    global sprite_x , sprite_y , sprite2_x , sprite2_y
-    global salud_goku,salud_broly,carga
+    global attack, sprite_x, sprite_y, saltando, peleando, teletransportacion, broly_peleando , direccion_goku,firstTimeScream
+    global sprite2_x,sprite2_y, salud_broly,desconvertido,teles,firstTime,t,t2,modo_juego,player_energy,broly_energy,golpeando_sound_firsTime,ataque_lanzado, dialogo_goku,dialogo_broly, pos_txt2
+    global goku_dialogo , broly_dialogo  , salud_goku 
+
     
 
     if modo_juego == "juego":
@@ -686,24 +685,7 @@ def update():
        
        #restableciendo valores
         firstTimeScream = False
-        goku_dialogo.pos = (-200,450)
-        broly_dialogo.pos = (1000,450)
-        dialogo.pos = (1000,550)
-        dialogo2.pos = (-200,550)
-        #Dialogos Posiciones
-        pos_txt1 = -280
-        pos_txt2 = 820
-
-        dialogo_goku = False
-        dialogo_broly = False
-
-        sprite_x = 200
-        sprite_y = 470
-        sprite2_x = 600
-        sprite2_y = 450
-        salud_goku = 30
-        salud_broly = 0
-        carga = 0
+       
     elif modo_juego == "dialogos":
         iniciar_dialogo(goku_dialogo,broly_dialogo) 
 
@@ -803,7 +785,7 @@ def mover_semillas():
     #Moviendo las semillas del ermitaño con sistema de probalididad + aleatoriedad.
 
     probabilidad_semilla = random.randint(1,20)
-    if probabilidad_semilla == 15 and  salud_goku <= 150:
+    if probabilidad_semilla == 15 and  salud_goku <= 20:
 
         #Dibujado de las semillas del ermitaño
             #Moviendo las semillas hacia abajo
@@ -827,11 +809,35 @@ def mover_semillas():
 
 def on_mouse_down(pos):
     global modo_juego,salud_broly,salud_goku
+    global pos_txt1 , pos_txt2 , dialogo_goku , dialogo_broly
+    global sprite_x , sprite_y , sprite2_x , sprite2_y, carga
+
+
+
     if goku_menu.collidepoint(pos):
         modo_juego = "dialogos"
         
     elif modo_juego == "derrota" and perdiste.collidepoint(pos):
         modo_juego = "menu"
+        goku_dialogo.pos = (-200,450)
+        broly_dialogo.pos = (1000,450)
+        dialogo.pos = (1000,550)
+        dialogo2.pos = (-200,550)
+        #Dialogos Posiciones
+        pos_txt1 = -280
+        pos_txt2 = 820
+
+        dialogo_goku = False
+        dialogo_broly = False
+
+        sprite_x = 200
+        sprite_y = 470
+        sprite2_x = 600
+        sprite2_y = 450
+        salud_goku = 30
+        salud_broly = 0
+        carga = 100
+    
 
 def barras():
     # Dibujar las barras de salud
