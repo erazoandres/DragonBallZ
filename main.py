@@ -50,13 +50,14 @@ energy_max = 100
 pos_txt1 = -280
 pos_txt2 = 820
 
-# Carga de Actores
+# Carga de Actoresf
 broly_menu = Actor("./elementos/elementos/broly_menu.png",(x_broly_menu,y_broly_menu))
 goku_menu =  Actor("./elementos/elementos/goku_menu.png",(x_goku_menu,y_goku_menu))
 fight = Actor("./elementos/elementos/fight.png",(center_x  , center_y + 140))
 avatar_broly = Actor("./elementos/elementos/avatar_broly.png",(760,40))
 logo =  Actor("./elementos/elementos/logo.png",(center_x  , center_y))
 vs = Actor("./elementos/elementos/vs.png",(center_x  , center_y - 35))
+vsGrande = Actor("./elementos/elementos/vsgrande.png",(center_x  , 500))
 avatar_goku =  Actor("./elementos/elementos/avatar_goku.png",(48,40))
 nube =  Actor("./elementos/elementos/nube.png", pos = (-1500,0)) 
 nave =  Actor("./elementos/elementos/nave.png",pos = (1400,0))
@@ -270,13 +271,16 @@ fondo_seleccionado = False
 attack_recargado = False
 firstTimeScream = True
 ataque_lanzado = False
-broly_peleando = True
+# broly_peleando = True
+broly_peleando = False
+
 desconvertido = False
 trayectoNave = False
 trayectoNube = True
 moviendose = False
-modo_juego = "menu"
+modo_juego = "juego"
 genkidama = False
+genkidama_mover = False
 firstTime = True
 peleando = False
 saltando = False
@@ -290,9 +294,9 @@ dialogo_broly = False
 direccion_goku = "derecha" # Direccion de personaje principal.
 indice_fondos = 0
 salud_broly = 0
-salud_goku = 50
+salud_goku = 40
 tiempo = 0
-carga = 0
+carga = False
 timer = 0
 
 
@@ -318,9 +322,10 @@ def iniciar_dialogo(actor1, actor2):
 
 
     if not (actor1.x < 100):
-        pgzero.clock.schedule(pasar,1)
+        pgzero.clock.schedule(pasar,10)
    
 def pasar():
+    global modo_juego
     modo_juego = "juego"
 
 def generar_semillas():
@@ -353,7 +358,7 @@ def sonidos():
     salto_sound = sounds.sonidosalto # Asegúrate de que el archivo kame.wav está en la carpeta sounds
     salto_sound.set_volume(0.2)
 
-    sonido_carga = sounds.sonidocarga # Asegúrate de que el archivo kame.wav está en la carpeta sounds
+    sonido_carga = sounds.sonidocarga2 # Asegúrate de que el archivo kame.wav está en la carpeta sounds
     sonido_carga.set_volume(0.3)
 
     sonido_muere = sounds.muere # Asegúrate de que el archivo kame.wav está en la carpeta sounds
@@ -452,43 +457,43 @@ def controles():
         direccion_goku = "izquierda"
         moviendose = True
     else:
-        moviendose = False
-        
-
-            
+        moviendose = False         
 
     # Salto del personaje principal
-    if keyboard.space:
-        #salto_sound.play()
+    if (keyboard.space or keyboard.w) and (volando_izquierda.y > 200 or volando_derecha.y >200) :
+
+        if sprite_y >450:
+            salto_sound.play()
         saltando = True
-        sprite_y = 315
+        # sprite_y = 315
+        sprite_y -=5 
         volando_izquierda.y -= 5
         volando_izquierda.x = sprite_x
         volando_derecha.y -= 5
         volando_derecha.x = sprite_x
-        carga = 1
-       
+        carga = True
     else:
         saltando = False
-        sprite_y = 460
-        volando_izquierda.y = 460
+        sprite_y += 5
+        volando_izquierda.y += 5
         volando_izquierda.x = sprite_x
-        volando_derecha.y = 460
+        volando_derecha.y +=5
         volando_derecha.x = sprite_x
-        carga = 0
+        carga = False
         
-
-   
+        if sprite_y > 460 or volando_izquierda.y > 460 or volando_derecha.y > 460 :
+            sprite_y = 460
+            volando_derecha.y = 460
+            volando_izquierda.y = 460
         
     # Carga del personaje principal
     if keyboard.i:
-        sonido_carga.play()
-        carga = 1
+        carga = True
         if player_energy < energy_max:
             player_energy += 1
-    #else:
-    #    carga = 0
-        
+    else:
+        carga = False
+  
     # Pelea del personaje principal
     if keyboard.l and salud_goku>0:
         peleando = 1
@@ -597,12 +602,12 @@ def update():
             #BOLAS ENERGIA
             for i in range(len(bolas_energia)):
 
-                if sprite2_x > sprite_x and ataque_lanzado == False:
+                if sprite2_x > sprite_x and not ataque_lanzado:
                     bolas_energia[i].x +=4
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia.png"
                     ataque_lanzado = False
                     
-                elif sprite2_x < sprite_x and ataque_lanzado == False:
+                elif sprite2_x < sprite_x and not ataque_lanzado:
                     bolas_energia[i].image = "./sprites/goku/otros/bola_energia_izquierda.png"
                     bolas_energia[i].x -=4
                     ataque_lanzado = False
@@ -624,7 +629,7 @@ def update():
 
                 # Broly sigue al personaje principal con un retraso
                 follow_speed = 0.0099  # Ajusta esta velocidad para cambiar el retraso
-                if broly_peleando == 1: 
+                if broly_peleando: 
                     sprite2_x += ((sprite_x - sprite2_x) * follow_speed)
             
                 #Verifica si derrotamos a Broly.
@@ -690,7 +695,7 @@ def update():
             dialogo_broly = True
         
         if keyboard.space and modo_juego == "dialogos" and not (goku_dialogo.x < 100):
-            modo_juego = "juego"
+            pasar()
 
 def elemento_volador_aleatorio():
     global elemento_volador_random
@@ -702,29 +707,33 @@ def on_key_down():
     global player_energy , teletransportacion , attack_recargado, current_sprite,attack, kame_sound_firstTime, genkidama
     
         # Ataque del personaje principal
+    
+    if keyboard.i : 
+        sonido_carga.play() 
+
     if keyboard.j and player_energy > 20:
         if kame_sound_firstTime == True:
            
             kame_sound.play()  # Reproduce el sonido de teletransportación
-            kame_sound_firstTime = False
+            # kame_sound_firstTime = False
         attack = 1        
         player_energy -= 20  
     else:
         current_sprite = 0
         attack = 0
 
-    if keyboard.t and salud_goku<=100:
+    if keyboard.t and salud_goku <= 40:
         genkidama = True
-        player_energy -= 100
+        pgzero.clock.schedule(llamarGenkidama,3)
+        player_energy -= 50
         
-    if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2 :
+    if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2 and player_energy >= 15:
     
         bola_energia = Actor("./sprites/goku/otros/bola_energia.png",(sprite_x,sprite_y))        
         bolas_energia.append(bola_energia)
         player_energy -= 15
 
-        # Teletransportación del personaje principal
-   
+    # Teletransportación del personaje principal
     if keyboard.u and player_energy >= 10 and modo_juego == "juego":
 
         golpeando_sound.stop()
@@ -734,7 +743,6 @@ def on_key_down():
     
     else:
         teletransportacion = 0
-
 
 
     if keyboard.o and player_energy >= 30:
@@ -798,7 +806,6 @@ def mover_semillas():
                 sonido_pide.play() 
                 firstTime = False
 
-
 def on_mouse_down(pos):
     global modo_juego,salud_broly,salud_goku
     global pos_txt1 , pos_txt2 , dialogo_goku , dialogo_broly
@@ -834,8 +841,11 @@ def on_mouse_down(pos):
         sprite2_y = 450
         salud_goku = 30
         salud_broly = 0
-        carga = 100
     
+def llamarGenkidama():
+    global genkidama_mover
+    print("GEnkidama moviendose")
+    genkidama_mover = True
 
 def barras():
     # Dibujar las barras de salud
@@ -849,12 +859,12 @@ def draw():
     
     global current_sprite6 , broly_peleando , kameha_derecha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
-    global sprite_left , sprite_right,sprite_y,moviendose,peleando,genkidama,salud_broly,genkidama_x
+    global sprite_left , sprite_right,sprite_y,moviendose,peleando,genkidama,salud_broly,genkidama_x,teletransportacion
     if modo_juego == "juego":
 
         #Dibujando fondo1
 
-        if fondo_seleccionado == False:
+        if not fondo_seleccionado:
             indice_fondos = random.choice(fondos)
             fondo_seleccionado = True
         
@@ -868,10 +878,9 @@ def draw():
         avatar_goku.draw()
         dibujar_semillas()
 
-        if sonido_fight_reproducido == False:
+        if not sonido_fight_reproducido:
             fight_sound.play()
             sonido_fight_reproducido = True
-
         if nube.x < -1400 and elemento_volador_random ==1:
             fight.draw()
         else:
@@ -880,13 +889,12 @@ def draw():
 
         for i in range(len(bolas_energia)):
             bolas_energia[i].draw()
-
-        if carga == 1:
+        # ESTADOS DEL SPRITE
+        if carga == True and not saltando:
             #Animacion de la carga de Goku.
             cargando[current_sprite2].pos = kameha_derecha[0].pos
             cargando[current_sprite2].y -= 18
             cargando[current_sprite2].draw()
-
         #Solo puede hacer el Kamehame-Ha si tiene energia
         if attack == True :
             #Animacion del Kamehame-ha!, en ambas direcciones
@@ -894,30 +902,21 @@ def draw():
                 kameha_derecha[current_sprite].draw()
             elif direccion_goku == "izquierda" and salud_goku>=0 :
                 kameha_izquierda[current_sprite].draw()   
-
         elif attack_recargado == True :
             #Animacion del Kamehame-ha!, en ambas direcciones
             if direccion_goku == "derecha" and salud_goku>=0 :
                 kameha_recargado_derecha[current_sprite8].draw()
+                
             elif direccion_goku == "izquierda" and salud_goku>=0 :
                 kameha_recargado_izquierda[current_sprite8].draw() 
-
         #Animacion cuando salto
-        elif saltando == True:
-
-            
+        elif saltando == True:           
            
-            if direccion_goku == "derecha":
-               
+            if direccion_goku == "derecha":    
                 #sprite_right.draw()
                 volando_derecha.draw()
-            
-                #animate(kameha_derecha[0] , tween = "linear" , duration = 2 , y = 420)        
-            else: 
-               
-                volando_izquierda.draw()
-                
-          
+            else:            
+                volando_izquierda.draw()          
         elif peleando == True:
 
             #Animacion de ataque fisico #1 hacia los lados
@@ -926,32 +925,29 @@ def draw():
             elif direccion_goku == "izquierda":
                 goku_peleando_izquierda[current_sprite3].draw()
         #Animacion y traslado de teletransportacion
-
         elif teletransportacion == True:
             teles[current_sprite4].draw()
             sprite_x = sprite2_x + 10       
-
         elif genkidama == True:
-            genkidama_goku[current_sprite5].pos = (sprite_x,sprite_y)
             genkidama_goku[current_sprite5].draw()
-            genkidama_bola[current_sprite9].draw()
+            genkidama_bola[current_sprite9].draw()    
+            genkidama_bola[current_sprite9].x =  sprite_x  - 10
+            genkidama_goku[current_sprite5].pos = (sprite_x,sprite_y)
 
-            if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 70:
-                genkidama = False
+            # if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 70:
+            #     genkidama = False
 
-            for i in range(len(genkidama_bola)):
-                index = genkidama_bola[current_sprite9].collidelist(broly_peleando_izquierda)
-                index2 = genkidama_bola[current_sprite9].collidelist(broly_peleando_derecha)
+            # for i in range(len(genkidama_bola)):
+            #     index = genkidama_bola[current_sprite9].collidelist(broly_peleando_izquierda)
+            #     index2 = genkidama_bola[current_sprite9].collidelist(broly_peleando_derecha)
                 
-                if index != -1 or index2 != -1:
+            #     if index != -1 or index2 != -1:
 
-                    genkidama = False
-                    genkidama_x = sprite_x
-                    salud_broly += random.randint(3,5)
-
+            #         genkidama = False
+            #         genkidama_x = sprite_x
+            #         salud_broly += random.randint(3,5)
         else:      
-
-            if moviendose == True:
+            if moviendose == True and not saltando:
                 if direccion_goku == "izquierda":
                     caminando_izquierda.x = sprite_x
                     caminando_izquierda.y = sprite_y
@@ -960,7 +956,6 @@ def draw():
                     caminando_derecha.x = sprite_x
                     caminando_derecha.y = sprite_y
                     caminando_derecha.draw()
-
             if salud_goku <= 0:  
 
                 if direccion_goku == "derecha":
@@ -970,11 +965,6 @@ def draw():
                 else:
                     goku_derrotado.pos = (sprite2_x+50,sprite2_y+20)
                     goku_derrotado.draw()
-                    
-                    
-
-
-
             else:
                 #Girar hacia los estados, estando estatico.
                 if direccion_goku == "izquierda" and not moviendose :
@@ -984,7 +974,6 @@ def draw():
                    sprite_right.draw()
                     
         #PROGRAMACION BROLY
-
         #Animacion de ataque de Broly
         if salud_broly <= 100 and salud_goku > 0 :
             
@@ -1004,15 +993,11 @@ def draw():
                 elif sprite2_x < sprite_x:
                     broly_peleando_derecha[1].draw()
 
-                
-
-        
         #Broly cambia de postura al ganar.
         elif salud_goku<=0:
             broly_peleando_derecha[5].draw()
-            terminar_juego()
-
-        
+            pgzero.clock.schedule( terminar_juego,3)
+           
             
         else:
             if modo_juego == "victoria" and not sprite_reproducido:
@@ -1042,6 +1027,7 @@ def draw():
         perdiste.draw()
     elif modo_juego == "dialogos":
         fondo_dialogo.draw()
+        vsGrande.draw()
         goku_dialogo.draw()
         broly_dialogo.draw()
         dialogo.draw()
@@ -1057,15 +1043,7 @@ def draw():
             screen.draw.text("Kkkkkk Kkkk Kkk", pos=(pos_txt2, 540), fontsize=20, color="white")
             screen.draw.text("¡Kaaaa Kaaakaaarotooooo!", pos=(pos_txt2, 560), fontsize=20, color="white")
    
-def espera():
 
-    x = 0
-    while x <= 10000:
-            print(x)
-            x += random.random()
-
-if modo_juego == "juego":
-    clock.schedule_interval_(saludar, 10.0)
 
 generar_semillas()
 sonidos()
