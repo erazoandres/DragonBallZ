@@ -7,7 +7,7 @@ import os
 # Configura el tamaño de la ventana
 WIDTH = 800
 HEIGHT = 600
-FPS = 15
+FPS = 120
 
 #Centrar la ventana al inicio.
 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -51,7 +51,7 @@ pos_txt1 = -280
 pos_txt2 = 820
 
 # Carga de Actoresf
-broly_menu = Actor("./elementos/elementos/broly_menu.png",(x_broly_menu,y_broly_menu))
+broly_menu = Actor("./elementos/elementos/broly_menu.png",(x_broly_menu,y_broly_menu)) # type: ignore
 goku_menu =  Actor("./elementos/elementos/goku_menu.png",(x_goku_menu,y_goku_menu))
 fight = Actor("./elementos/elementos/fight.png",(center_x  , center_y + 140))
 avatar_broly = Actor("./elementos/elementos/avatar_broly.png",(760,40))
@@ -722,10 +722,10 @@ def on_key_down():
         current_sprite = 0
         attack = 0
 
-    if keyboard.t and salud_goku <= 40:
+    if keyboard.t and salud_goku <= 40 and player_energy >= 35:
         genkidama = True
+        player_energy //= 2
         pgzero.clock.schedule(llamarGenkidama,3)
-        player_energy -= 50
         
     if keyboard.k and modo_juego == "juego" and len(bolas_energia) <=2 and player_energy >= 15:
     
@@ -755,11 +755,8 @@ def elementos_secundarios():
 
     global genkidama_bola
 
-    if genkidama_bola[current_sprite9].x < 800:
+    if genkidama_bola[current_sprite9].x < 800 and genkidama_mover == True:
         genkidama_bola[current_sprite9].x += 10
-    else:
-        genkidama_bola[current_sprite9].x = sprite_x - 105
-
 
     if elemento_volador_random == 1:
 
@@ -859,7 +856,7 @@ def draw():
     
     global current_sprite6 , broly_peleando , kameha_derecha , sprite_x, sprite2_x  ,sprite_reproducido,firstTimeEndBattle,indice_fondos
     global goku_derrotado,elemento_volador_random,trayectoNave,trayectoNube, modo_juego,timer, fondo_seleccionado,sonido_fight_reproducido
-    global sprite_left , sprite_right,sprite_y,moviendose,peleando,genkidama,salud_broly,genkidama_x,teletransportacion
+    global sprite_left , sprite_right,sprite_y,moviendose,peleando,genkidama,salud_broly,genkidama_x,teletransportacion,genkidama_mover , current_sprite9
     if modo_juego == "juego":
 
         #Dibujando fondo1
@@ -931,21 +928,21 @@ def draw():
         elif genkidama == True:
             genkidama_goku[current_sprite5].draw()
             genkidama_bola[current_sprite9].draw()    
-            genkidama_bola[current_sprite9].x =  sprite_x  - 10
-            genkidama_goku[current_sprite5].pos = (sprite_x,sprite_y)
+            
 
-            # if abs(genkidama_bola[current_sprite9].x - sprite_x) >= 70:
-            #     genkidama = False
 
-            # for i in range(len(genkidama_bola)):
-            #     index = genkidama_bola[current_sprite9].collidelist(broly_peleando_izquierda)
-            #     index2 = genkidama_bola[current_sprite9].collidelist(broly_peleando_derecha)
+            for i in range(len(genkidama_bola)):
+                index = genkidama_bola[current_sprite9].collidelist(broly_peleando_izquierda)
+                index2 = genkidama_bola[current_sprite9].collidelist(broly_peleando_derecha)
+            
+                if index != -1 or index2 != -1:
+
+                    genkidama = False
+                    genkidama_mover = False
+                    current_sprite9 = 0
+                    salud_broly += 50
+                    
                 
-            #     if index != -1 or index2 != -1:
-
-            #         genkidama = False
-            #         genkidama_x = sprite_x
-            #         salud_broly += random.randint(3,5)
         else:      
             if moviendose == True and not saltando:
                 if direccion_goku == "izquierda":
